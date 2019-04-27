@@ -6,11 +6,12 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 from torch import nn, optim
 import time
+import copy
 
 
 transformers = {'train_transforms' : transforms.Compose([
     transforms.Resize((224,224)),
-    #transforms.CenterCrop(224),
+    transforms.CenterCrop(224),
     transforms.RandomRotation(20),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
@@ -61,131 +62,111 @@ imshow(out, title = [class_names[x] for x in classes])
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        #obtain the ResNet model from torchvision.model library
         self.model = torchvision.models.resnet50(pretrained=True)
-        #build our classifier and since we are classifying the images into NORMAL and PNEMONIA, we output a two-dimensional tensor.
+
         self.classifier = nn.Sequential(
         nn.Linear(self.model.fc.in_features,2),
         nn.LogSoftmax(dim=1))
-        #Requires_grad = False denies the ResNet model the ability to update its parameters hence make it unable to train.
+
         for params in self.model.parameters():
             params.requires_grad = False
-            #We replace the fully connected layers of the base model(ResNet model) which served as the classifier with our custom trainable classifier.
+
         self.model.fc = self.classifier
+
     def forward(self, x):
-        # x is our input data
         return self.model(x)
+
     def fit(self, dataloaders, num_epochs):
-        #we check whether a gpu is enabled for our environment.
+        f= open("fit_run.txt","w+")
+
         train_on_gpu = torch.cuda.is_available()
-        #we define our optimizer and pass in the model parameters(weights and biases) into the constructor of the optimizer we want. More info: https://pytorch.org/docs/stable/optim.html
         optimizer = optim.Adam(self.model.fc.parameters())
         #Essentially what scheduler does is to reduce our learning by a certain factor when less progress is being made in our training.
         scheduler = optim.lr_scheduler.StepLR(optimizer, 4)
         #criterion is the loss function of our model. we use Negative Log-Likelihood loss because we used  log-softmax as the last layer of our model. We can remove the log-softmax layer and replace the nn.NLLLoss() with nn.CrossEntropyLoss()
         criterion = nn.NLLLoss()
         since = time.time()
-        #model.state_dict() is a dictionary of our model's parameters. What we did here is to deepcopy it and assign it to a variable
         best_model_wts = copy.deepcopy(self.model.state_dict())
         best_acc = 0.0
-      #we check if a gpu is enabled for our environment and move our model to the gpu
+
         if train_on_gpu:
             self.model = self.model.cuda()
         for epoch in range(num_epochs):
-            print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-            print('-' * 10)
-            # Each epoch has a training and validation phase. We iterate through the training set and validation set in every epoch.
+            f.write('Epoch {}/{}'.format(epoch, num_epochs - 1))
+            f.write('-' * 10)
+
             for phase in ['train', 'test']:
-                #we apply the scheduler to the learning rate in the training phase since we don't train our model in the validation phase
                 if phase == 'train':
                     scheduler.step()
-                    self.model.train()  # Set model to training mode
+                    self.model.train()  
                 else:
-                    self.model.eval()   # Set model to evaluate mode to turn off features like dropout.
+                    self.model.eval()  
+
                 running_loss = 0.0
                 running_corrects = 0
-                # Iterate over batches of train and validation data.
+
                 for inputs, labels in dataloaders[phase]:
                     if train_on_gpu:
                         inputs = inputs.cuda()
                         labels = labels.cuda()
-                    # clear all gradients since gradients get accumulated after every iteration.
                     optimizer.zero_grad()
                     
-                    # track history if only in training phase
                     with torch.set_grad_enabled(phase == 'train'):
                         outputs = self.model(inputs)
                         _, preds = torch.max(outputs, 1)
-                        #calculates the loss between the output of our model and ground-truth labels
                         loss = criterion(outputs, labels)
 
-                        # perform backpropagation and optimization only if in training phase
                         if phase == 'train':
-                            #backpropagate gradients from the loss node through all the parameters
                             loss.backward()
-                            #Update parameters(Weighs and biases) of our model using the gradients.
                             optimizer.step()
-                    # statistics
+
                     running_loss += loss.item() * inputs.size(0)
                     running_corrects += torch.sum(preds == labels.data)
 
                 epoch_loss = running_loss / dataset_sizes[phase]
                 epoch_acc = running_corrects.double() / dataset_sizes[phase]
-                print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+                f.write('{} Loss: {:.4f} Acc: {:.4f}'.format(
                     phase, epoch_loss, epoch_acc))
                     
-                # deep copy the model if we obtain a better validation accuracy than the previous one.
                 if phase == 'test' and epoch_acc > best_acc:
                     best_acc = epoch_acc
                     best_model_wts = copy.deepcopy(self.model.state_dict())
         time_elapsed = time.time() - since
-        print('Training complete in {:.0f}m {:.0f}s'.format(
+        f.write('Training complete in {:.0f}m {:.0f}s'.format(
             time_elapsed // 60, time_elapsed % 60))
-        print('Best val Acc: {:4f}'.format(best_acc))
-        
-        # load best model parameters and return it as the final trained model.
+        f.write('Best val Acc: {:4f}'.format(best_acc))
+        f.close()
         self.model.load_state_dict(best_model_wts)
         return self.model
 
 
-import copy
-
-#we instantiate our model class
-model = Model()
-#run 10 training epochs on our model
-model_ft = model.fit(dataloaders, 1)
-
-
 def run_test(model, dataloaders):
-    #we check whether a gpu is enabled for our environment.
     train_on_gpu = torch.cuda.is_available()
-    #we define our optimizer and pass in the model parameters(weights and biases) into the constructor of the optimizer we want. More info: https://pytorch.org/docs/stable/optim.html
-    #criterion is the loss function of our model. we use Negative Log-Likelihood loss because we used  log-softmax as the last layer of our model. We can remove the log-softmax layer and replace the nn.NLLLoss() with nn.CrossEntropyLoss()
     criterion = nn.NLLLoss()
     since = time.time()
-    model.eval()   # Set model to evaluate mode to turn off features like dropout.
+    model.eval()   
     running_loss = 0.0
     running_corrects = 0
     items_num = 0
-    # Iterate over batches of train and validation data.
+    
     for inputs, labels in dataloaders['test']:
         if train_on_gpu:
             inputs = inputs.cuda()
             labels = labels.cuda()
-        # clear all gradients since gradients get accumulated after every iteration
-
-        # track history if only in training phase
+       
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
             _, preds = torch.max(outputs, 1)
             loss = criterion(outputs, labels)
 
-        # statistics
         items_num += inputs.size(0)
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
-
-    print("we got {0} right out of {1}".format(running_corrects, items_num))
+    f = open("test_res.txt","w+")
+    f.write("Test Results: we got {0} right out of {1}, ({2:.2f}%)".format(running_corrects, items_num, float(running_corrects)/items_num))
+    f.close()
     return
-    
+
+model = Model()
+model_ft = model.fit(dataloaders, 1) 
 run_test(model_ft, dataloaders)
