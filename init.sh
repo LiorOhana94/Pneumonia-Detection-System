@@ -1,2 +1,2 @@
-pip install PIL
+pip install pillow
 python run.py
