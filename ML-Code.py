@@ -167,6 +167,4 @@ def run_test(model, dataloaders):
     f.close()
     return
 
-model = Model()
-model_ft = model.fit(dataloaders, 1) 
-run_test(model_ft, dataloaders)
+
