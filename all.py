@@ -62,7 +62,8 @@ imshow(out, title = [class_names[x] for x in classes])
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        self.model = torchvision.models.resnet50(pretrained=True)
+        self.model = torchvision.models.resnet50(pretrained=False)
+        self.model.load_state_dict(torch.load("/storage/resnet_pretrained.pth"), strict=False)
 
         self.classifier = nn.Sequential(
         nn.Linear(self.model.fc.in_features,2),
