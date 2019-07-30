@@ -60,10 +60,11 @@ imshow(out, title = [class_names[x] for x in classes])
 
 
 class Model(nn.Module):
-    def __init__(self):
+    def __init__(self, load_path = None):
         super(Model, self).__init__()
         self.model = torchvision.models.resnet50(pretrained=False)
-        self.model.load_state_dict(torch.load("/storage/resnet_pretrained.pth"), strict=False)
+        if load_path in not None:
+            self.model.load_state_dict(torch.load(load_path), strict=False)
 
         self.classifier = nn.Sequential(
         nn.Linear(self.model.fc.in_features,2),
