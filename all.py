@@ -163,7 +163,7 @@ def run_test(model, dataloaders):
         items_num += inputs.size(0)
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
-    f = open("test_res.txt","w+")
+    f = open("/storage/test_res.txt","w+")
     f.write("Test Results: we got {0} right out of {1}, ({2:.2f}%)".format(running_corrects, items_num, float(running_corrects)/items_num))
     f.close()
     return
