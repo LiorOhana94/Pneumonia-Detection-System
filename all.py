@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from torch import nn, optim
 import time
 import copy
-from collections import OrderedDict
 
 
 transformers = {'train_transforms' : transforms.Compose([
@@ -66,12 +65,7 @@ class Model(nn.Module):
 
         self.model = torchvision.models.resnet50(pretrained=False)
         if load_path is not None:
-            state_dict = torch.load(load_path)
-            new_state_dict = OrderedDict()
-            for k, v in state_dict.items():
-                name = k[7:] # remove `module.`
-                new_state_dict[name] = v
-            self.model.load_state_dict(new_state_dict)
+            self.model.load_state_dict(torch.load(load_path), strict=False)
 
         self.classifier = nn.Sequential(
         nn.Linear(self.model.fc.in_features,2),
