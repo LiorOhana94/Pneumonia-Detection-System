@@ -1,1 +1,1 @@
-python "/scripts/infer" --m="CNN"
+python "/scripts/infer.py" --m="CNN"
