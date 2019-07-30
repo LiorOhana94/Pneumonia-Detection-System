@@ -16,7 +16,7 @@ def index():
 @app.route('/predict/<int:x>', methods=['GET'])
 def predict(x):
 	
-	return "Fuck you " + x + " times (" + filename + ")"
+	return ("Fuck you % times (" + filename + ")" % (x))
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)
