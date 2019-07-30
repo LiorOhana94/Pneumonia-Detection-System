@@ -1,1 +1,0 @@
-python "/scripts/infer.py" --m="CNN"
