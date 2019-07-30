@@ -71,7 +71,7 @@ class Model(nn.Module):
             for k, v in state_dict.items():
                 name = k[7:] # remove `module.`
                 new_state_dict[name] = v
-            model.load_state_dict(new_state_dict)
+            self.model.load_state_dict(new_state_dict)
 
         self.classifier = nn.Sequential(
         nn.Linear(self.model.fc.in_features,2),
