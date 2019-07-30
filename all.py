@@ -155,6 +155,8 @@ def run_test(model, dataloaders):
         if train_on_gpu:
             inputs = inputs.cuda()
             labels = labels.cuda()
+            model.cuda()
+
        
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
