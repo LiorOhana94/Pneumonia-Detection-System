@@ -12,4 +12,3 @@ def load():
 	model.load_state_dict(torch.load("resnet_pretrained.pth"), strict=False)
 	return model
 
-load()
