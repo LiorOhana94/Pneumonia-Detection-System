@@ -34,7 +34,9 @@ def upload_file():
       filename = uuid.uuid4()
       path = 'temp-images/%s%s' % (filename, extension)
       f.save(path)
-      return pred(model, path)[0]
+      res = pred(model, path)[0]
+      print(res)
+      return "%d" % res
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)
