@@ -34,7 +34,7 @@ def upload_file():
       filename = uuid.uuid4()
       path = 'temp-images/%s%s' % (filename, extension)
       f.save(path)
-      res = pred(model, path)[0]
+      res = pred(model, path)
       print(res)
       return "%d" % res
 

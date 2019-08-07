@@ -9,6 +9,8 @@ from torch import nn, optim
 import time
 import copy
 
+
+
 class Model(nn.Module):
     def __init__(self, load_path = None):
         super(Model, self).__init__()
