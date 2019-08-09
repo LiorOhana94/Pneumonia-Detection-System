@@ -82,7 +82,7 @@ def run_test(model, dataloaders):
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
             
-            f.write(outputs)
+            f.write(outputs.size())
             _, preds = torch.max(outputs, 1)
             f.write(preds)
             f.close()
