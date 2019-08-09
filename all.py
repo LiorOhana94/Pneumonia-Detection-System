@@ -69,7 +69,9 @@ def run_test(model, dataloaders):
     running_loss = 0.0
     running_corrects = 0
     items_num = 0
-    
+
+    f = open("/storage/test_log.txt","w+")
+
     for inputs, labels in dataloaders['test']:
         if train_on_gpu:
             inputs = inputs.cuda()
@@ -79,9 +81,14 @@ def run_test(model, dataloaders):
        
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
+            
+            f.write(outputs)
             _, preds = torch.max(outputs, 1)
-            loss = criterion(outputs, labels)
+            f.write(preds)
+            f.close()
 
+            loss = criterion(outputs, labels)
+        
         items_num += inputs.size(0)
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
