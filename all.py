@@ -114,7 +114,7 @@ class Model(nn.Module):
         return self.model(x)
 
     def fit(self, dataloaders, num_epochs, step_size=4):
-        f= open("fit_run.txt","w+")
+        f= open("/storage/fit_run_lr%d.txt" % step_size,"w+")
 
         train_on_gpu = torch.cuda.is_available()
         optimizer = optim.Adam(self.model.fc.parameters())
