@@ -81,9 +81,9 @@ def run_test(model, dataloaders):
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
             
-            torch.save(outputs, 'outputs_log.txt')
+            torch.save(outputs, '/storage/outputs_log.txt')
             _, preds = torch.max(outputs, 1)
-            torch.save(preds, 'preds_log.txt')
+            torch.save(preds, '/storage/preds_log.txt')
 
 
 
