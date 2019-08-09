@@ -70,7 +70,6 @@ def run_test(model, dataloaders):
     running_corrects = 0
     items_num = 0
 
-    f = open("/storage/test_log.txt","w+")
 
     for inputs, labels in dataloaders['test']:
         if train_on_gpu:
@@ -82,10 +81,11 @@ def run_test(model, dataloaders):
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
             
-            f.write(type(outputs))
+            torch.save(outputs, 'outputs_log.txt')
             _, preds = torch.max(outputs, 1)
-            f.write(preds)
-            f.close()
+            torch.save(preds, 'preds_log.txt')
+
+
 
             loss = criterion(outputs, labels)
         
