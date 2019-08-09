@@ -81,11 +81,10 @@ def run_test(model, dataloaders):
        
         with torch.set_grad_enabled(False):
             outputs = model(inputs)
-            
-            f.write(outputs.size())
+            torch.save('outputs_log.txt', outputs, 'ascii')
             _, preds = torch.max(outputs, 1)
-            f.write(preds)
-            f.close()
+            torch.save('preds_log.txt', preds, 'ascii')
+
 
             loss = criterion(outputs, labels)
         
