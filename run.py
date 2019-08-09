@@ -3,6 +3,6 @@ import torch
 
 for i in range(5):
     model = Model()
-    model_ft = model.fit(dataloaders, 50, i + 1) 
+    model_ft = model.fit(dataloaders, 2, i + 1) 
     run_test(model_ft, dataloaders)
     torch.save(model_ft, "/storage/resnet_xray_fitted_lr%d.model" % (i + 1))
