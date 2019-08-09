@@ -6,6 +6,7 @@ from predict import model
 from predict import predict as pred
 import torch
 
+labels = ["healthy", "pneumonia"]
 
 parser = ArgumentParser()
 parser.add_argument("-m", "--model", dest="model",
@@ -35,8 +36,8 @@ def upload_file():
       path = 'temp-images/%s%s' % (filename, extension)
       f.save(path)
       res = pred(model, path)
-      print(res)
-      return "%d" % res
+      _, preds = torch.max(res, 1)
+      return "%d - %s" % (preds[0].item(), labels[preds[0].item()])
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)
