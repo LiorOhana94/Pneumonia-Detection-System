@@ -113,13 +113,13 @@ class Model(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-    def fit(self, dataloaders, num_epochs):
+    def fit(self, dataloaders, num_epochs, step_size=4):
         f= open("fit_run.txt","w+")
 
         train_on_gpu = torch.cuda.is_available()
         optimizer = optim.Adam(self.model.fc.parameters())
         #Essentially what scheduler does is to reduce our learning by a certain factor when less progress is being made in our training.
-        scheduler = optim.lr_scheduler.StepLR(optimizer, 4)
+        scheduler = optim.lr_scheduler.StepLR(optimizer, step_size)
         #criterion is the loss function of our model. we use Negative Log-Likelihood loss because we used  log-softmax as the last layer of our model. We can remove the log-softmax layer and replace the nn.NLLLoss() with nn.CrossEntropyLoss()
         criterion = nn.NLLLoss()
         since = time.time()
