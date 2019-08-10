@@ -94,27 +94,30 @@ def run_test(model, dataloaders):
 
 
 class Model(nn.Module):
-    def __init__(self, load_path = None):
+    def __init__(self, load_path = None, transfer = False):
         super(Model, self).__init__()
+        
+        self.transfered = transfer
 
         self.model = torchvision.models.resnet50(pretrained=False)
         if load_path is not None:
             self.model.load_state_dict(torch.load(load_path), strict=False)
+        
+        if transfer:
+            self.classifier = nn.Sequential(
+            nn.Linear(self.model.fc.in_features,2),
+            nn.LogSoftmax(dim=1))
 
-        self.classifier = nn.Sequential(
-        nn.Linear(self.model.fc.in_features,2),
-        nn.LogSoftmax(dim=1))
+            for params in self.model.parameters():
+                params.requires_grad = False
 
-        for params in self.model.parameters():
-            params.requires_grad = False
-
-        self.model.fc = self.classifier
+            self.model.fc = self.classifier
 
     def forward(self, x):
         return self.model(x)
 
     def fit(self, dataloaders, num_epochs, step_size=4):
-        f= open("/storage/fit_run_lr%d.txt" % step_size,"w+")
+        f= open("/storage/fit_run_lr%d_%s.txt" % (step_size, "transfered" if self.transfered else ""),"w+")
 
         train_on_gpu = torch.cuda.is_available()
         optimizer = optim.Adam(self.model.fc.parameters())
@@ -175,3 +178,4 @@ class Model(nn.Module):
         f.close()
         self.model.load_state_dict(best_model_wts)
         return self.model
+
