@@ -105,13 +105,13 @@ class Model(nn.Module):
         
         if transfer:
             self.classifier = nn.Sequential(
-                nn.Linear(self.model.fc.in_features, 256), nn.ReLU(), nn.Dropout(0.2),
+                nn.Linear(self.model.classifier[6].in_features.in_features, 256), nn.ReLU(), nn.Dropout(0.2),
                 nn.Linear(256, 2), nn.LogSoftmax(dim=1))
 
             for params in self.model.parameters():
                 params.requires_grad = False
 
-            self.model.fc = self.classifier
+            self.model.classifier[6] = self.classifier
         else:
             for params in self.model.parameters():
                 params.requires_grad = True
@@ -123,7 +123,7 @@ class Model(nn.Module):
         f= open("/storage/fit_run_lr%d_%s.txt" % (step_size, "transfered" if self.transfered else ""),"w+")
 
         train_on_gpu = torch.cuda.is_available()
-        optimizer = optim.Adam(self.model.fc.parameters())
+        optimizer = optim.Adam(self.model.classifier[6].parameters()) 
         #Essentially what scheduler does is to reduce our learning by a certain factor when less progress is being made in our training.
         scheduler = optim.lr_scheduler.StepLR(optimizer, step_size)
         #criterion is the loss function of our model. we use Negative Log-Likelihood loss because we used  log-softmax as the last layer of our model. We can remove the log-softmax layer and replace the nn.NLLLoss() with nn.CrossEntropyLoss()
