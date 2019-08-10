@@ -99,7 +99,7 @@ class Model(nn.Module):
         
         self.transfered = transfer
 
-        self.model = torchvision.models.resnet50(pretrained=False)
+        self.model = torchvision.models.vgg16(pretrained=True)
         if load_path is not None:
             self.model.load_state_dict(torch.load(load_path), strict=False)
         

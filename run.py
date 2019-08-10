@@ -5,6 +5,6 @@ import torch
 for i in range(4):
     model = Model()
     lr = i + 2
-    fitted_model = model.fit(dataloaders, 42, lr) 
+    fitted_model = model.fit(dataloaders, 30, lr) 
     run_test(fitted_model, dataloaders)
-    torch.save(fitted_model, "/storage/resnet_xray_fitted_lr%d.model" % (lr))
+    torch.save(fitted_model, "/storage/vgg16_xray_fitted_lr%d.model" % (lr))
