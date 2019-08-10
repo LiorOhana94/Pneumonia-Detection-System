@@ -105,8 +105,8 @@ class Model(nn.Module):
         
         if transfer:
             self.classifier = nn.Sequential(
-            nn.Linear(self.model.fc.in_features,2),
-            nn.LogSoftmax(dim=1))
+                nn.Linear(self.model.fc.in_features, 256), nn.ReLU(), nn.Dropout(0.2),
+                nn.Linear(256, 2), nn.LogSoftmax(dim=1))
 
             for params in self.model.parameters():
                 params.requires_grad = False
