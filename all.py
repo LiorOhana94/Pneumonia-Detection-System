@@ -112,6 +112,9 @@ class Model(nn.Module):
                 params.requires_grad = False
 
             self.model.fc = self.classifier
+        else:
+            for params in self.model.parameters():
+                params.requires_grad = True
 
     def forward(self, x):
         return self.model(x)
@@ -165,7 +168,7 @@ class Model(nn.Module):
 
                 epoch_loss = running_loss / dataset_sizes[phase]
                 epoch_acc = running_corrects.double() / dataset_sizes[phase]
-                f.write('{} Loss: {:.4f} Acc: {:.4f}'.format(
+                f.write('{} Loss: {:.4f} Acc: {:.4f}\n'.format(
                     phase, epoch_loss, epoch_acc))
                     
                 if phase == 'test' and epoch_acc > best_acc:
