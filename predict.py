@@ -19,7 +19,7 @@ test_loader = transforms.Compose([
 def predict(model, image_path):
     train_on_gpu = False # torch.cuda.is_available()
     model.eval()   
-    
+    model.cpu()
     image = image_loader(test_loader, image_path)
     with torch.no_grad():
         if train_on_gpu:

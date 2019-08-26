@@ -9,35 +9,64 @@ from torch import nn, optim
 import time
 import copy
 
-
-
 class Model(nn.Module):
-    def __init__(self, load_path = None):
+    def __init__(self, load_path = None, transfer = False):
         super(Model, self).__init__()
+        
+        self.transfered = transfer
+        self.gradients = None
 
-        self.model = torchvision.models.resnet50(pretrained=False)
+        self.model = torchvision.models.vgg16(pretrained=True)
         if load_path is not None:
             self.model.load_state_dict(torch.load(load_path), strict=False)
+        
+        if transfer:
+            self.classifier = nn.Sequential(
+                nn.Linear(self.model.classifier[6].in_features, 256), nn.ReLU(), nn.Dropout(0.2),
+                nn.Linear(256, 2), nn.LogSoftmax(dim=1))
 
-        self.classifier = nn.Sequential(
-        nn.Linear(self.model.fc.in_features,2),
-        nn.LogSoftmax(dim=1))
+            for params in self.model.parameters():
+                params.requires_grad = False
 
-        for params in self.model.parameters():
-            params.requires_grad = False
+            self.model.classifier[6] = self.classifier
+        else:
+            for params in self.model.parameters():
+                params.requires_grad = True
 
-        self.model.fc = self.classifier
+
+    def activations_hook(self, grad):
+        self.gradients = grad
 
     def forward(self, x):
-        return self.model(x)
+        x = self.model.features_conv(x)
+        
+        # register the hook
+        h = x.register_hook(self.activations_hook)
+        
+        # apply the remaining pooling
+        x = self.model.max_pool(x)
+        x = x.view((1, -1))
+        x = self.model.classifier(x)
+        return x
 
-    def fit(self, dataloaders, num_epochs):
-        f= open("fit_run.txt","w+")
+    # method for the gradient extraction
+    def get_activations_gradient(self):
+        return self.gradients
+    
+    # method for the activation exctraction
+    def get_activations(self, x):
+        return self.model.features_conv(x)
+
+    def fit(self, dataloaders, num_epochs, step_size=4):
+        f= open("/storage/fit_run_lr%d_%s.txt" % (step_size, "transfered" if self.transfered else ""),"w+")
 
         train_on_gpu = torch.cuda.is_available()
-        optimizer = optim.Adam(self.model.fc.parameters())
+        # Check:
+        optimizer = optim.Adam(self.model.classifier[6].parameters()) 
+
+        # Check:
         #Essentially what scheduler does is to reduce our learning by a certain factor when less progress is being made in our training.
-        scheduler = optim.lr_scheduler.StepLR(optimizer, 4)
+        scheduler = optim.lr_scheduler.StepLR(optimizer, step_size)
         #criterion is the loss function of our model. we use Negative Log-Likelihood loss because we used  log-softmax as the last layer of our model. We can remove the log-softmax layer and replace the nn.NLLLoss() with nn.CrossEntropyLoss()
         criterion = nn.NLLLoss()
         since = time.time()
@@ -60,7 +89,7 @@ class Model(nn.Module):
                 running_loss = 0.0
                 running_corrects = 0
 
-                for inputs, labels in dataloaders[phase]:
+                for inputs, labels in dataloaders[phase].loader:
                     if train_on_gpu:
                         inputs = inputs.cuda()
                         labels = labels.cuda()
@@ -78,9 +107,9 @@ class Model(nn.Module):
                     running_loss += loss.item() * inputs.size(0)
                     running_corrects += torch.sum(preds == labels.data)
 
-                epoch_loss = running_loss / dataset_sizes[phase]
-                epoch_acc = running_corrects.double() / dataset_sizes[phase]
-                f.write('{} Loss: {:.4f} Acc: {:.4f}'.format(
+                epoch_loss = running_loss / dataloaders[phase].length
+                epoch_acc = running_corrects.double() / dataloaders[phase].length
+                f.write('{} Loss: {:.4f} Acc: {:.4f}\n'.format(
                     phase, epoch_loss, epoch_acc))
                     
                 if phase == 'test' and epoch_acc > best_acc:
