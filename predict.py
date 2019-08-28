@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 import torch
 import numpy as np
 
-model = torch.load(os.path.join("resnet_xray_fitted.model"), map_location='cpu')
+model = torch.load(os.path.join("current_model/resnet_xray_fitted.model"), map_location='cpu')
 
 
 test_loader = transforms.Compose([
