@@ -94,7 +94,7 @@ model_name = "resnet19_transferred_v2"
 f = open("/storage/train_log_%s.txt" % model_name,"w+")
 
 for epoch in range(100):
-    print('EPOCH: ',epoch+1)
+    f.write(f'EPOCH: {epoch+1}/n')
     
     train_acc = []
     val_acc = []
