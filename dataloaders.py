@@ -31,7 +31,7 @@ transformers = {'train_transforms' : transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])}
 trans = ['train_transforms','valid_transforms','test_transforms']
-path = "./storage/chest_xray/"
+path = "/storage/chest_xray/"
 categories = ['train','val','test']
 
 
