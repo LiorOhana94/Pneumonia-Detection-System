@@ -95,7 +95,7 @@ model_name = f"resnet19_transferred_v2_{num_epochs}e"
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
 for epoch in range(num_epochs):
-    f.write(f'EPOCH: {epoch+1}/n')
+    f.write(f'EPOCH: {epoch+1}\n')
     
     train_acc = []
     val_acc = []
@@ -120,7 +120,7 @@ for epoch in range(num_epochs):
         
         running_loss += loss.item()
         count +=1
-    f.write('Training loss:  %d %s' % (running_loss/count, '/n'))
+    f.write('Training loss:  %d %s' % (running_loss/count, '\n'))
     mean_train_losses.append(running_loss/count)
         
     model.eval()
@@ -138,10 +138,10 @@ for epoch in range(num_epochs):
         count +=1
 
     mean_val_loss = val_running_loss/count
-    f.write('Validation loss:  %d %s' % (mean_val_loss, '/n'))
+    f.write('Validation loss:  %d %s' % (mean_val_loss, '\n'))
 
-    f.write('Training accuracy:  %d %s' % (np.mean(train_acc), '/n'))
-    f.write('Validation accuracy:  %d %s' % (np.mean(val_acc), '/n'))
+    f.write('Training accuracy:  %d %s' % (np.mean(train_acc), '\n'))
+    f.write('Validation accuracy:  %d %s' % (np.mean(val_acc), '\n'))
     
     mean_val_losses.append(mean_val_loss)
     
@@ -153,12 +153,12 @@ for epoch in range(num_epochs):
    
     if mean_val_loss < minLoss:
         torch.save(model.state_dict(), '/storage/models/best_loss_vgg19_{num_epochs}e.pth' )
-        f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}/n')
+        f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}\n')
         minLoss = mean_val_loss
         
     if val_acc_ > maxValacc:
         torch.save(model.state_dict(), '/storage/models/best_acc_vgg19_v2_{num_epochs}e.pth' )
-        f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}/n')
+        f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
         maxValacc = val_acc_
     
 f.write('training complete.')
