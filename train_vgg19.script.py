@@ -19,7 +19,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 def vgg19():
     model = VGG(make_layers())
-    state_dict = torch.load('/storage/vgg19_pretrained_dictstate.pth')
+    state_dict = torch.load('./storage/vgg19_pretrained_dictstate.pth')
     model.load_state_dict(state_dict)
     return model
 
@@ -91,7 +91,7 @@ minLoss = 99999
 maxValacc = -99999
 model_name = "resnet19_transferred_v2"
 
-f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
+f = open("./storage/trainlogs/log_%s.txt" % model_name,"w+")
 
 for epoch in range(100):
     f.write(f'EPOCH: {epoch+1}/n')
@@ -103,7 +103,7 @@ for epoch in range(100):
     
     model.train()
     count = 0
-    for images, labels in dataloaders['train']:        
+    for images, labels in dataloaders['train']['loader']:        
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
         
