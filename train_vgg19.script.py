@@ -91,7 +91,7 @@ minLoss = 99999
 maxValacc = -99999
 model_name = "resnet19_transferred_v2"
 
-f = open("/storage/trianlogs/log_%s.txt" % model_name,"w+")
+f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
 for epoch in range(100):
     f.write(f'EPOCH: {epoch+1}/n')
