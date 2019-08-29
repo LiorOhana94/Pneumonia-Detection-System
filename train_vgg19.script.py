@@ -125,7 +125,7 @@ for epoch in range(100):
     model.eval()
     count = 0
     val_running_loss = 0.0
-    for images, labels in dataloaders['val']:
+    for images, labels in dataloaders['val']['loader']:
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
         
