@@ -36,5 +36,5 @@ def run_test(model, dataloaders, model_name):
 model_names = ['best_acc_vgg19_v2_100e', 'best_loss_vgg19_v2_100e']
 model = torchvision.models.vgg19(pretrained=False)
 for name in model_names:
-    model.load_state_dict(f'/storage/models/{name}.pth')
+    model.load_state_dict(torch.load(f'/storage/models/{name}.pth'))
     run_test(model, dataloaders, name)
