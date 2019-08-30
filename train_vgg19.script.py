@@ -18,7 +18,7 @@ from cam.network.net import VGG, make_layers
 from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 def vgg19():
-    model = VGG(make_layers())
+    model = VGG(make_layers(), num_classes=2)
     state_dict = torch.load('/storage/vgg19_pretrained_dictstate.pth')
     model.load_state_dict(state_dict)
     return model
@@ -89,7 +89,7 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-num_epochs = 100
+num_epochs = 6
 model_name = f"resnet19_transferred_v2_{num_epochs}e"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
@@ -152,12 +152,12 @@ for epoch in range(num_epochs):
     
    
     if mean_val_loss < minLoss:
-        torch.save(model.state_dict(), f'/storage/models/best_loss_vgg19_{num_epochs}e.pth' )
+        torch.save(model, f'/storage/models/best_loss_vgg19_{num_epochs}e.model' )
         f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}\n')
         minLoss = mean_val_loss
         
     if val_acc_ > maxValacc:
-        torch.save(model.state_dict(), f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.pth' )
+        torch.save(model, f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.model' )
         f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
         maxValacc = val_acc_
     
