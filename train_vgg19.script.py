@@ -152,12 +152,12 @@ for epoch in range(num_epochs):
     
    
     if mean_val_loss < minLoss:
-        torch.save(model.state_dict(), '/storage/models/best_loss_vgg19_{num_epochs}e.pth' )
+        torch.save(model.state_dict(), f'/storage/models/best_loss_vgg19_{num_epochs}e.pth' )
         f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}\n')
         minLoss = mean_val_loss
         
     if val_acc_ > maxValacc:
-        torch.save(model.state_dict(), '/storage/models/best_acc_vgg19_v2_{num_epochs}e.pth' )
+        torch.save(model.state_dict(), f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.pth' )
         f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
         maxValacc = val_acc_
     
