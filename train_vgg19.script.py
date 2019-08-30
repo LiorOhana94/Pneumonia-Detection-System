@@ -90,7 +90,7 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-num_epochs = 6
+num_epochs = 100
 model_name = f"resnet19_transferred_v2_{num_epochs}e"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
