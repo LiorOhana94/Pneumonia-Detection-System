@@ -39,5 +39,5 @@ def run_test(model, dataloaders, model_name):
 model_names = ['best_acc_vgg19_v2_6e', 'best_loss_vgg19_v2_6e']
 
 for name in model_names:
-    model = torch.load(f'./storage/models/{name}.pth')
+    model = torch.load(f'/storage/models/{name}.pth')
     run_test(model, dataloaders, f'{name}_after_load')
