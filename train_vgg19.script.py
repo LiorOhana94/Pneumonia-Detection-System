@@ -9,6 +9,7 @@ from skimage.io import imshow
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from test import run_test
 
 from torch.autograd import Variable
 from torchvision import datasets, transforms
@@ -152,7 +153,7 @@ for epoch in range(num_epochs):
     
    
     if mean_val_loss < minLoss:
-        torch.save(model, f'/storage/models/best_loss_vgg19_{num_epochs}e.model' )
+        torch.save(model, f'/storage/models/best_loss_vgg19_v2_{num_epochs}e.model' )
         f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}\n')
         minLoss = mean_val_loss
         
@@ -160,6 +161,7 @@ for epoch in range(num_epochs):
         torch.save(model, f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.model' )
         f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
         maxValacc = val_acc_
-    
+
+run_test(model, dataloaders, model_name)
 f.write('training complete.')
 f.close()

@@ -1,8 +1,6 @@
 from dataloaders import dataloaders
 import torch
 import torch.nn as nn
-import torchvision
-from cam.network.net import VGG, make_layers
 
 def run_test(model, dataloaders, model_name):
     train_on_gpu = torch.cuda.is_available()
@@ -33,11 +31,3 @@ def run_test(model, dataloaders, model_name):
     f.write("Test Results: we got {0} right out of {1}, ({2:.2f}%)".format(running_corrects, items_num, float(running_corrects)/items_num))
     f.close()
     return
-
-# almog is in the house
-
-model_names = ['best_acc_vgg19_v2_6e', 'best_loss_vgg19_v2_6e']
-
-for name in model_names:
-    model = torch.load(f'./storage/models/{name}.pth')
-    run_test(model, dataloaders, f'{name}_after_load')
