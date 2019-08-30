@@ -2,6 +2,7 @@ from dataloaders import dataloaders
 import torch
 import torch.nn as nn
 import torchvision
+from cam.network.net import VGG, make_layers
 
 def run_test(model, dataloaders, model_name):
     train_on_gpu = torch.cuda.is_available()
@@ -33,8 +34,13 @@ def run_test(model, dataloaders, model_name):
     f.close()
     return
 
+# almog is in the house
+
 model_names = ['best_acc_vgg19_v2_100e', 'best_loss_vgg19_v2_100e']
-model = torchvision.models.vgg19(pretrained=False)
+model = VGG(make_layers())
+model.features[-5] = nn.Conv2d(512,512,3, padding=1)
+model.features[-3] = nn.Conv2d(512,2,3, padding=1)
+
 for name in model_names:
     model.load_state_dict(torch.load(f'/storage/models/{name}.pth'), strict=False)
     run_test(model, dataloaders, name)
