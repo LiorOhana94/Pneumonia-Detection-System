@@ -2,3 +2,4 @@
 *.pyc
 storage/
 temp-images/
+class-activation-maps/
