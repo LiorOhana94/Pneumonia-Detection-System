@@ -162,6 +162,5 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
         maxValacc = val_acc_
 
-run_test(model, dataloaders, model_name)
 f.write('training complete.')
 f.close()
