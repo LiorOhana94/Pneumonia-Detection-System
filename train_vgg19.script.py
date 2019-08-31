@@ -20,7 +20,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 1
+num_epochs = 5
 lr =.0005
 
 # ---------------------------------- #
