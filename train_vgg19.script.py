@@ -175,12 +175,13 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
 
-
-plt.plot(train_accs, '-r')
+plt.figure()
+plt.plot(train_accs, '-p')
 plt.plot(val_accs, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_accfig.png')
 
-plt.plot(train_losses, '-r')
+plt.figure()
+plt.plot(train_losses, '-b')
 plt.plot(val_losses, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
