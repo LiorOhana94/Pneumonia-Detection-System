@@ -18,6 +18,13 @@ from dataloaders import dataloaders
 from cam.network.net import VGG, make_layers
 from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
+# ----- Training Configuration ----- #
+
+num_epochs = 200
+lr =.0005
+
+# ---------------------------------- #
+
 def vgg19():
     model = VGG(make_layers())
     state_dict = torch.load('/storage/vgg19_pretrained_dictstate.pth')
@@ -79,7 +86,6 @@ valid_loader = torch.utils.data.DataLoader(dataset_valid, batch_size=batch_size,
 """
 
 criterion = nn.CrossEntropyLoss()
-lr =.0001
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 model.cuda()
 
@@ -90,7 +96,6 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-num_epochs = 200
 model_name = f"resnet19_transferred_v2_{num_epochs}e"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
