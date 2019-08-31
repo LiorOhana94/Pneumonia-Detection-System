@@ -41,7 +41,6 @@ def predict(model, image_path, generate_map=False):
         
         res = torch.argmax(outputs.data).cpu().detach().numpy()
 
-
         return [res, heatmap_file_name]
 
 
@@ -50,7 +49,6 @@ def create_heatmap_file(sf, outputs, image, image_path):
     arr = sf.features.cpu().detach().numpy()
     features_data = arr[0]
     res = torch.argmax(outputs.data).cpu().detach().numpy()
-    print(res, outputs.data)
     ans = np.dot(np.rollaxis(features_data,0,3), [ res, res])
     ans = resize(ans, (224,224))
     plt.figure()

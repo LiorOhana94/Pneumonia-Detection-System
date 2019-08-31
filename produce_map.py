@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from predict import predict, image_loader, test_loader
 from cam.network.utils import SaveFeatures, imshow_transform
 
-model = torch.load('./storage/models/best_acc_vgg19_v2_100e.model')
-image_file = './temp-images/0faedaf7-d644-416c-a704-74fc0763ba76.jpeg'
+from model import model 
+image_file = './temp-images/0e387530-1398-495a-b2c3-0717c5ca4a25.jpeg'
 
 for image in os.listdir('./temp-images/'): 
     image_file = f'./temp-images/{image}'

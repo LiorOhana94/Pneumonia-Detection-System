@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, request
 from argparse import ArgumentParser
 import uuid
-from predict import model
+from model import model
 from predict import predict as pred
 import torch
 
@@ -20,24 +20,18 @@ print("hi")
 def index():
     return "ELI - OHANA =]"
 
-@app.route('/predict/<int:x>', methods=['GET'])
-def predict(x):
-	
-	return ("Fuck you % times (" + filename + ")" % (x))
-
-@app.route('/uploader', methods =  ['POST'])
+@app.route('/diagnose', methods =  ['POST'])
 def upload_file():
    if request.method == 'POST':
-
       f = request.files['file']
-      print(f.filename)
       extension = os.path.splitext(f.filename)[1]
       filename = uuid.uuid4()
       path = 'temp-images/%s%s' % (filename, extension)
       f.save(path)
-      res = pred(model, path)
-      _, preds = torch.max(res, 1)
-      return "%d - %s" % (preds[0].item(), labels[preds[0].item()])
+      res, heatmap_file_name  = pred(model, path, generate_map=True)
+      print(res)
+      results = { 'result_index': res.tolist(), 'result_text': labels[res], 'heatmap_file_name': heatmap_file_name}
+      return jsonify(results)
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)

@@ -96,7 +96,7 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-model_name = f"resnet19_transferred_v2_{num_epochs}e"
+model_name = f"resnet19_{num_epochs}e_{lr}lr"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
@@ -159,12 +159,12 @@ for epoch in range(num_epochs):
    
     if mean_val_loss < minLoss:
         torch.save(model, f'/storage/models/best_loss_vgg19_v2_{num_epochs}e.model' )
-        f.write(f'NEW BEST Val Loss: {mean_val_loss} ........old best:{minLoss}\n')
+        f.write(f'NEW BEST Val Loss: {mean_val_loss} old best:{minLoss}\n')
         minLoss = mean_val_loss
         
     if val_acc_ > maxValacc:
         torch.save(model, f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.model' )
-        f.write(f'NEW BEST Val Acc: {val_acc_} ........old best:{maxValacc}\n')
+        f.write(f'NEW BEST Val Acc: {val_acc_} old best:{maxValacc}\n')
         maxValacc = val_acc_
 
 f.write('training complete.')
