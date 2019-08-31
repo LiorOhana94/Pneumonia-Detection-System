@@ -35,7 +35,7 @@ def run_test(model, dataloaders, model_name):
     return
 
 # almog is in the house
-epochs = 100
+epochs = 200
 model_names = [f'best_acc_vgg19_v2_{epochs}e', f'best_loss_vgg19_v2_{epochs}e']
 
 for name in model_names:
