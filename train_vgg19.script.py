@@ -20,7 +20,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 200
+num_epochs = 1
 lr =.0005
 
 # ---------------------------------- #
@@ -100,16 +100,21 @@ model_name = f"resnet19_{num_epochs}e_{lr}lr"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
+train_accs = []
+train_losses = []
+val_accs = []
+val_losses = []
+
 for epoch in range(num_epochs):
     f.write(f'EPOCH: {epoch+1}\n')
     
-    train_acc = []
-    val_acc = []
+
     
     running_loss = 0.0
-    
+    running_corrects = 0
     model.train()
     count = 0
+
     for images, labels in dataloaders['train']['loader']:        
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
@@ -117,55 +122,67 @@ for epoch in range(num_epochs):
         outputs = model(images) 
         
         optimizer.zero_grad()
+
         loss = criterion(outputs, labels)
-        train_acc.append(accuracy(outputs, labels))
-        
+        _, preds = torch.max(outputs, 1)
+        running_corrects += torch.sum(preds == labels.data)
+
         
         loss.backward()
         optimizer.step()        
         
         running_loss += loss.item()
         count +=1
+
     f.write('Training loss:  %d %s' % (running_loss/count, '\n'))
-    mean_train_losses.append(running_loss/count)
-        
+    f.write('Training acc:  %d %s' % (running_corrects.double() / dataloaders['train']['length'], '\n'))
+    train_losses.append(running_loss/count)
+    train_accs.append(running_corrects.double() / dataloaders['train']['length'])
+
     model.eval()
     count = 0
     val_running_loss = 0.0
+    val_running_corrects = 0
+
     for images, labels in dataloaders['val']['loader']:
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
         
         outputs = model(images)
+        _, preds = torch.max(outputs, 1)
+        val_running_corrects += torch.sum(preds == labels.data)
         loss = criterion(outputs, labels)
 
-        val_acc.append(accuracy(outputs, labels))
         val_running_loss += loss.item()
         count +=1
 
+    val_acc = val_running_corrects.double()/ dataloaders['val']['length']
+    val_accs.append(val_acc)
+    val_losses.append(val_running_loss/count)
+    
+    f.write('Validation loss:  %d %s' % (val_running_loss/count, '\n'))
+    f.write('Validation accuracy:  %d %s' % (val_acc, '\n'))    
+    
     mean_val_loss = val_running_loss/count
-    f.write('Validation loss:  %d %s' % (mean_val_loss, '\n'))
-
-    f.write('Training accuracy:  %d %s' % (np.mean(train_acc), '\n'))
-    f.write('Validation accuracy:  %d %s' % (np.mean(val_acc), '\n'))
-    
-    mean_val_losses.append(mean_val_loss)
-    
-    mean_train_acc.append(np.mean(train_acc))
-    
-    val_acc_ = np.mean(val_acc)
-    mean_val_acc.append(val_acc_)
-    
    
     if mean_val_loss < minLoss:
-        torch.save(model, f'/storage/models/best_loss_vgg19_v2_{num_epochs}e.model' )
+        torch.save(model, f'/storage/models/{model_name}.model' )
         f.write(f'NEW BEST Val Loss: {mean_val_loss} old best:{minLoss}\n')
         minLoss = mean_val_loss
         
-    if val_acc_ > maxValacc:
-        torch.save(model, f'/storage/models/best_acc_vgg19_v2_{num_epochs}e.model' )
-        f.write(f'NEW BEST Val Acc: {val_acc_} old best:{maxValacc}\n')
-        maxValacc = val_acc_
+    if val_acc > maxValacc:
+        torch.save(model, f'/storage/models/{model_name}.model' )
+        f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
+        maxValacc = val_acc
+
+
+plt.plot(train_accs, '-r')
+plt.plot(val_accs, '-g')
+plt.savefig(f'/storage/trainlogs/{model_name}_accfig.png')
+
+plt.plot(train_losses, '-r')
+plt.plot(val_losses, '-g')
+plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
 f.write('training complete.')
 f.close()
