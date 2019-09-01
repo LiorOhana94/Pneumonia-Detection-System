@@ -23,7 +23,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 
 num_epochs = 150
-lr =.001
+lr =.0005
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
@@ -172,6 +172,7 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
+        if maxValacc > 0.85: return
 
 plt.figure()
 plt.plot(train_accs, '-p')
