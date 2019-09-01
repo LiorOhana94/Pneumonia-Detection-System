@@ -22,7 +22,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 200
+num_epochs = 3
 lr =.001
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
@@ -184,6 +184,6 @@ plt.plot(val_losses, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
 
-compare_after_loading(model)
 f.write('training complete.')
 f.close()
+compare_after_loading(model, dataloaders, model_name)
