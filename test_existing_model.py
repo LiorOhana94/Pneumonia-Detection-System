@@ -4,8 +4,10 @@ import torch.nn as nn
 import torchvision
 from cam.network.net import VGG, make_layers
 
-epochs = 200
-model_names = [f'best_loss_vgg19_v2_200e', f'best_acc_vgg19_v2_200e']
+
+num_epochs = 200
+lr =.001
+model_name = f"resnet19_{num_epochs}e_{lr}lr" 
 
 def run_test(model, dataloaders, model_name):
     train_on_gpu = torch.cuda.is_available()
@@ -40,6 +42,5 @@ def run_test(model, dataloaders, model_name):
 # almog is in the house
 
 
-for name in model_names:
-    model = torch.load(f'/storage/models/{name}.model')
-    run_test(model, dataloaders, f'{name}_after_load')
+model = torch.load(f'/storage/models/{model_name}.model')
+run_test(model, dataloaders, f'{model_name}_after_load')

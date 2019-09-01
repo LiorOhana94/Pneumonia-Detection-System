@@ -2,7 +2,7 @@ from dataloaders import dataloaders
 import torch
 import torch.nn as nn
 
-def run_test(model, dataloaders, model_name):
+def run_test(model, dataloaders, model_name, testfile_prefix = ''):
     train_on_gpu = torch.cuda.is_available()
     criterion = nn.NLLLoss()
     model.eval()   
@@ -27,7 +27,14 @@ def run_test(model, dataloaders, model_name):
         items_num += inputs.size(0)
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
-    f = open("/storage/tests_results/test_res_%s.txt" % model_name,"w+")
-    f.write("Test Results: we got {0} right out of {1}, ({2:.2f}%)".format(running_corrects, items_num, float(running_corrects)/items_num))
+    f = open(f"/storage/tests_results/{testfile_prefix}_test_res_{model_name}.txt" ,"w+")
+    f.write(f"Test Results: we got {running_corrects} right out of {items_num}, ({float(running_corrects)/items_num:.2f}%)".format(running_corrects, items_num, float(running_corrects)/items_num))
     f.close()
+    return
+
+def compare_after_loading(model, dataloaders, model_name):
+    run_test(model, dataloaders, model_name, 'before_load')
+    torch.save(f'/storage/models/{model_name}.model')
+    loaded_model = torch.load(f'/storage/models/{model_name}.model')
+    run_test(loaded_model, dataloaders, model_name, 'after_load')
     return

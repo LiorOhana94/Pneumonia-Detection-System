@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from skimage.transform import resize
 from skimage.io import imshow
 """
+from test import compare_after_loading
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -22,7 +24,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 num_epochs = 200
 lr =.001
-
+model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
 def vgg19():
@@ -165,15 +167,11 @@ for epoch in range(num_epochs):
     
     mean_val_loss = val_running_loss/count
    
-    if mean_val_loss < minLoss:
-        torch.save(model, f'/storage/models/{model_name}.model' )
-        f.write(f'NEW BEST Val Loss: {mean_val_loss} old best:{minLoss}\n')
-        minLoss = mean_val_loss
-        
     if val_acc > maxValacc:
         torch.save(model, f'/storage/models/{model_name}.model' )
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
+        best_model = model
 
 plt.figure()
 plt.plot(train_accs, '-p')
@@ -185,5 +183,7 @@ plt.plot(train_losses, '-b')
 plt.plot(val_losses, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
+
+compare_after_loading(model)
 f.write('training complete.')
 f.close()
