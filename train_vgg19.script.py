@@ -172,7 +172,7 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
-        if maxValacc > 0.85: return
+        if maxValacc > 0.85: break
 
 plt.figure()
 plt.plot(train_accs, '-p')
