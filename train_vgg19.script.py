@@ -22,9 +22,9 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 75
+num_epochs = 80
 lr =.0005
-wd = 0.07
+wd = 0.02
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
