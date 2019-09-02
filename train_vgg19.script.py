@@ -24,7 +24,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 num_epochs = 80
 lr =.0005
-wd = 0.02
+wd = 0.05
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
@@ -89,7 +89,7 @@ valid_loader = torch.utils.data.DataLoader(dataset_valid, batch_size=batch_size,
 """
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
+optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 model.cuda()
 
 mean_train_losses = []
@@ -173,7 +173,6 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
-        if maxValacc > 0.85: break
 
 plt.figure()
 plt.plot(train_accs, '-p')
