@@ -24,7 +24,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 num_epochs = 150
 lr =.0001
-wd =.1
+wd =.075
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
@@ -99,7 +99,7 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-model_name = f"resnet19_{num_epochs}e_{lr}lr"
+model_name = f"resnet19_{num_epochs}e_{lr}lr_{wd}wd"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
