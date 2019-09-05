@@ -20,6 +20,8 @@ from dataloaders import dataloaders
 from cam.network.net import VGG, make_layers
 from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
+# Almog is in the house
+
 # ----- Training Configuration ----- #
 
 num_epochs = 150
