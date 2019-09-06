@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700,700i&display=swap');
+
+body, html{
+    height: calc(100% - 2em);
+    margin: 0;
+    font-family: 'Montserrat';
+}
+
+body{
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#b2cf9c+0,063444+100,53cbf1+100,05abe0+100,53cbf1+100 */
+background: #b2cf9c; /* Old browsers */
+background: -moz-linear-gradient(45deg, #b2cf9c 0%, #063444 100%, #53cbf1 100%, #05abe0 100%, #53cbf1 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, #b2cf9c 0%,#063444 100%,#53cbf1 100%,#05abe0 100%,#53cbf1 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, #b2cf9c 0%,#063444 100%,#53cbf1 100%,#05abe0 100%,#53cbf1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2cf9c', endColorstr='#53cbf1',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+background-repeat: no-repeat;
+background-attachment: fixed;
+display: grid;
+grid-template-columns: 20% auto;
+padding: 2em;
+}
+
+aside{
+    color: #ffffff;
+    padding: 0em;
+    background: #DCE1F6;
+    grid-template-columns: auto;
+    grid-template-rows: 20% auto;
+}
+
+figure{
+    margin: 0;
+}
+
+figcaption{
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+}
+
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    margin-top: 2em;
+    background: none;
+    width: 100%;
+}
+
+ul li a{
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: .8em;
+    display: block;
+    padding: 1.5em 3em;
+    background-color: rgba(255, 255,255,.35);
+    color: #000000;
+}
+
+ul li a:hover
+{
+    background: white;
+}
+
+main{
+    background: #ffffff;
+    padding: 2em 4em;
+    background: white;
+    background-size: 70%;
+}
+
+#avatar{
+    border-radius: 50%;
+    background: #ffffff;
+    width: 50px;
+    height: 50px;
+    margin: 2em auto 1em auto;
+}
+
+h1{
+    font-size: 7em;
+    margin: 0;
+    line-height: 1em;
+}
+
+h2{
+    font-size: 4em;
+    margin-top: 0.5em;
+}
+
+h3{
+    font-size: 1.3em;
+    margin-top: 0;
+}
+
+h3 img{
+    height: 30px;
+    width: 50px;
+    margin-top: 0;
+}
+
+.cta{
+    display: inline-block;
+    color: #ffffff;
+    background: #063444;
+    text-decoration: none;
+    padding: .8em 3em;
+    font-size: 1.3em;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 2em 0;
+}
+
+.cta:hover{
+    background-color: #0c607d
+}
+
+p{
+    font-size: 1.2em;
+    margin-top: 0.5em;
+    line-height: 1.7;
+}
+
+.buttons-class{
+    display: inline-block;
+    color: #ffffff;
+    background: #063444;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 0.8em;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 2em 0;
+    cursor: pointer;
+    font-family: 'Montserrat';
+}
+
+.buttons-class:hover{
+    background-color: #0c607d;
+}
+
+#custom-text{
+    margin-left: 10px;
+    color: #aaa;
+}
+
+td{
+    padding: 0.5em;
+}
+
+.loginbox{
+    width: 320px;
+    height: 420px;
+    background: #fff;
+    color: #000;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+}
+
+.loginavatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+h4{
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.loginbox p{
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.loginbox input{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.loginbox input[type="text"], input[type="password"]{
+    border: none;
+    border-bottom: 1px solid #000;
+    background: transparent;
+    outline: none;
+    height: 40px;
+    color: #000;
+    font-size: 16px;
+    font-family: 'Montserrat';
+}
+
+.loginbox input[type="submit"]{
+    border: none;
+    outline: none;
+    height: 40px;
+    background: #063444;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-size: 18px;
+    border-radius: 20px;
+}
+
+.loginbox input[type="submit"]:hover{
+    background-color: #0c607d;
+    cursor: pointer;
+}
+
+.loginbox a{
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 20px;
+    color: darkgrey;
+}
+
+.loginbox a:hover{
+    color: palevioletred;
+}
+
+#scan-id-number{
+    height: 30px;
+}
+
+.hidden-class{
+    display: flex;
+}
+
+.inputs-text{
+    margin-bottom: 20px;
+    height: 30px;
+    margin-right: 15px;
+}
+
+.label{
+    min-width: 180px;
+    margin-top: 10px;
+}
+
+.scan-info-class{
+    display: flex;
+}
+
+#main-columns{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 50% auto;
+}
+
+.update-button{
+    margin: 0;
+    height: 38px;
+}
+
+#scan-img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+#system-diagnosis-label{
+    font-weight: 700;
+}
+
+#system-diagnosis-text{
+    background-color: #6c96cc;
+}

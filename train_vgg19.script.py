@@ -20,11 +20,13 @@ from dataloaders import dataloaders
 from cam.network.net import VGG, make_layers
 from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
+# Almog is in the house
+
 # ----- Training Configuration ----- #
 
-num_epochs = 80
-lr =.0005
-wd = 0.05
+num_epochs = 150
+lr =.0001
+wd =.075
 model_name = f"resnet19_{num_epochs}e_{lr}lr"
 # ---------------------------------- #
 
@@ -89,7 +91,7 @@ valid_loader = torch.utils.data.DataLoader(dataset_valid, batch_size=batch_size,
 """
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
 
 mean_train_losses = []
@@ -99,7 +101,7 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-model_name = f"resnet19_{num_epochs}e_{lr}lr"
+model_name = f"resnet19_{num_epochs}e_{lr}lr_{wd}wd"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 

@@ -3,3 +3,6 @@
 storage/
 temp-images/
 class-activation-maps/
+
+.idea/
+node_modules/

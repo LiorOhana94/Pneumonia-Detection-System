@@ -1,0 +1,11 @@
+.update-button{
+    margin: 0;
+    height: 38px;
+}
+
+#scan-img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
