@@ -1,5 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const uuid = require('uuid/v4');
+const fetch = require('node-fetch');
+
 var db;
 (async function () {
   db = await require('../db/db');
@@ -61,6 +64,11 @@ router.post('/addPatient', async function (req, res, next) {
 
 router.post('/dignoseImage', function (req, res, next) {
   console.log(req.body);
+  /* 
+  1 save image
+  2 update db
+  3 send to flask
+  */
 });
 
 router.get('/searchPage', function (req, res, next) {
@@ -76,28 +84,26 @@ var multer  = require('multer');
 
 const upload = multer({
   dest: "./temp/"
-  // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
 router.post(
-  "/upload-image",
-  upload.single("scanToDiagnose"),
-  (req, res) => {
+  "/diagnoseScan",
+  upload.single("scan"),
+  async function(req, res, next) {
     try {
       const tempPath = req.file.path;
-      const targetPath = path.join(__dirname, "../upload/image.png");
-
-      if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      const filename = uuid();
+      const targetPath = path.join(__dirname, `../public/scans/${filename}${ext}`);
+      if ( ext === ".png" || ext === '.jpeg' || ext === '.jpg') {
         fs.rename(tempPath, targetPath, err => {
           if (err) {
             console.log(err);
             return;
           }
-
-          res
-            .status(200)
-            .contentType("text/plain")
-            .end("File uploaded!");
+          // file saved! update database with scan file name...
+          req.filename = filename + ext;
+          next();
         });
       } else {
         fs.unlink(tempPath, err => {
@@ -109,12 +115,20 @@ router.post(
           res
             .status(403)
             .contentType("text/plain")
-            .end("Only .png files are allowed!");
+            .end("Only .png / .jpeg / .jpg files are allowed!");
         });
 
       }
     } catch (e) {
       console.log(e);
     }
+  },
+  async function(req, res, next){
+    fetch(global.config.endpoint + '/predict', {
+      method: 'post',
+      body:{
+        scan: `https://localhost:3000/scans/${req.filename}`
+      }
+    }).then((res) => console.log(res))
   }
 );

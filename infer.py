@@ -15,7 +15,6 @@ parser.add_argument("-m", "--model", dest="model",
 filename = parser.parse_args().model
 
 app = Flask(__name__)
-print("hi")
 @app.route('/')
 def index():
     return "ELI - OHANA =]"

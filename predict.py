@@ -49,7 +49,7 @@ def create_heatmap_file(sf, outputs, image, image_path):
     arr = sf.features.cpu().detach().numpy()
     features_data = arr[0]
     res = torch.argmax(outputs.data).cpu().detach().numpy()
-    ans = np.dot(np.rollaxis(features_data,0,3), [ res, res])
+    ans = np.dot(np.rollaxis(features_data,0,3), [res, 1 - res])
     ans = resize(ans, (224,224))
     plt.figure()
     plt.subplots(figsize=(4,4))

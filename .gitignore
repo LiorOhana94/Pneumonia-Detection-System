@@ -5,4 +5,6 @@ temp-images/
 class-activation-maps/
 
 .idea/
+scans/
+temp/
 node_modules/

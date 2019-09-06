@@ -4,7 +4,6 @@ var db = require('./db/db');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const config = require('./config/config');
 const passport = require('passport');
 require('./config/passport')(passport);
 const session = require('express-session');
@@ -16,6 +15,10 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+console.log(`using environment: ${app.get('env')}`);
+
+global.config = require('./config/config')[app.get('env')];
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -23,14 +26,14 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 
 app.use(session({
-  secret: config.secret,
+  secret: global.config.secret,
   store: new MySQLStore(
     {
 
-      host: config.host,
-      user: config.user,
-      password: config.password,
-      database: config.database
+      host: global.config.host,
+      user: global.config.user,
+      password: global.config.password,
+      database: global.config.database
   }),
   resave: false,
   saveUninitialized: false
