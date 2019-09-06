@@ -1,10 +1,11 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from argparse import ArgumentParser
 import uuid
 from model import model
 from predict import predict as pred
 import torch
+import requests
 
 labels = ["healthy", "pneumonia"]
 
@@ -16,6 +17,7 @@ filename = parser.parse_args().model
 
 app = Flask(__name__)
 print("hi")
+
 @app.route('/')
 def index():
     return "ELI - OHANA =]"
@@ -32,6 +34,22 @@ def upload_file():
       print(res)
       results = { 'result_index': res.tolist(), 'result_text': labels[res], 'heatmap_file_name': heatmap_file_name}
       return jsonify(results)
+
+@app.route('/send-activation-map', methods =  ['GET'])
+def send_file():
+      scan_giud = request.args.get('scan_guid')
+      print(scan_giud)
+      if scan_giud is None: 
+            abort(405)
+      map_path = f'./class-activation-maps/{scan_giud}.png'
+      
+      if not(os.path.exists(map_path)):
+            abort(405)
+
+      files = {'file':  (f'{scan_giud}.png', open(map_path, 'rb'), 'image/png')}
+      requests.post("http://127.0.0.1:3000/upload-image/", files=files)
+      return "ok"
+
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)
