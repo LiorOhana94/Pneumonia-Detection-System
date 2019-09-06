@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <title>Medikals</title>
+</head>
+
+<body>
+    <aside>
+        <figure>
+            <div id="avatar"></div>
+            <figcaption>Lior Ohana</figcaption>
+        </figure>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/authed/aboutPage">About</a></li>
+                <li><a href="/authed/uploadPage">Upload</a></li>
+                <li><a href="/authed/searchPage">Search</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main>
+        <div id="main-columns">
+            <div id="left-column">
+                <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
+                <div class="upload-form">
+                    <input type="file" id="new-file" hidden="hidden" />
+                    <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
+                    <span id="custom-text">No file chosen yet.</span>
+
+                    <div>
+                        <div class="label">Patient's ID:</div>
+                        <input type="number" id="id-number" class="inputs-text">
+                    </div>
+                    <input type="button" id="search-id-button" class="buttons-class" value="Submit"
+                        onclick="trySendForDiagnosis()">
+
+                    <div id="new-patient" style="display: none;">
+                        <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
+                        </p>
+                        <div class="hidden-class">
+                            <div class="label">First name:</div>
+                            <input type="text" id="first-name-text" class="inputs-text">
+                        </div>
+                        <div class="hidden-class">
+                            <div class="label">Last name:</div>
+                            <input type="text" id="last-name-text" class="inputs-text">
+                        </div>
+                        <div class="hidden-class">
+                            <div class="label">Age:</div>
+                            <input type="number" id="age-number" class="inputs-text">
+                        </div>
+                        <div class="hidden-class">
+                            <div class="label">Phone number:</div>
+                            <input type="text" id="phone-number-text" class="inputs-text">
+                        </div>
+                        <input type="button" id="submit-button" class="buttons-class" value="Submit"
+                            onclick="createNewPatient()">
+                    </div>
+                </div>
+            </div>
+            <div id="right-column" style="display: none;">
+                <img src="/images/lungs-placeholder.jpg" alt="Chest X-Ray" height="250" width="250" id="scan-img">
+                <div class="scan-info-class">
+                    <div class="label">Scan ID:</div>
+                    <input type="number" id="id-number" class="inputs-text" disabled>
+                </div>
+                <div class="scan-info-class">
+                    <div class="label">Patient's ID:</div>
+                    <input type="number" id="id-number" class="inputs-text" disabled>
+                </div>
+                <div class="scan-info-class">
+                    <div class="label">Date:</div>
+                    <input type="datetime" id="date-text" class="inputs-text" disabled>
+                </div>
+                <div class="scan-info-class">
+                    <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
+                    <input type="text" id="system-diagnosis-text" class="inputs-text" disabled>
+                </div>
+                <div class="scan-info-class">
+                    <div class="label">Final diagnosis:</div>
+                    <input type="text" id="final-diagnosis-text" class="inputs-text">
+                    <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
+                        onclick="updateDiagnosis()">
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    const fileInputElem = document.getElementById("new-file");
+    const uploadButton = document.getElementById("upload-button");
+    const customText = document.getElementById("custom-text");
+    const submitButton = document.getElementById("submit-button");
+    const idNumber = document.getElementById("id-number");
+    const newPatientDiv = document.getElementById("new-patient");
+    const firstNameText = document.getElementById("first-name-text");
+    const lastNameText = document.getElementById("last-name-text");
+    const ageNumber = document.getElementById("age-number");
+    const phoneNumberText = document.getElementById("phone-number-text");
+    const searchIdButton = document.getElementById("search-id-button");
+
+    uploadButton.addEventListener("click", function () {
+        fileInputElem.click();
+    });
+
+    fileInputElem.addEventListener("change", function () {
+        if (fileInputElem.value) {
+            customText.innerHTML = fileInputElem.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
+        }
+        else {
+            customText.innerHTML = "No file chosen yet.";
+        }
+    });
+
+    function trySendForDiagnosis() {
+        fetch('/authed/doesIdExist',
+            {
+                method: 'post',
+                body: JSON.stringify({
+                    id: idNumber.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (idExist) {
+                console.log(idExist);
+                if (!idExist) {
+                    newPatientDiv.style.display = "block";
+                    searchIdButton.style.display = "none";
+                }
+                else {
+                    uploadForDiagnosis();
+                }
+            });
+    }
+
+    function createNewPatient() {
+        fetch('/authed/addPatient',
+            {
+                method: 'post',
+                body: JSON.stringify({
+                    id: idNumber.value,
+                    firstName: firstNameText.value,
+                    lastName: lastNameText.value,
+                    age: ageNumber.value,
+                    phone: phoneNumberText.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            })
+            .then(uploadForDiagnosis);
+    }
+
+    function uploadForDiagnosis() {
+        fetch('/authed/dignoseImage',
+            {
+                method: 'post',
+                body: fileInputElem.files[0],
+                headers:
+                {
+                    'Content-Type': fileInputElem.files[0].type
+                }
+            })
+    }
+
+    function updateDiagnosis() {
+
+    }
+
+</script>
