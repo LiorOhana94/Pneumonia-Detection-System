@@ -5,9 +5,9 @@ INSERT INTO users (
     password
 )
 VALUES
-    ('Lior', 'Ohana', 'LiorOhana94','12345'),
-    ('Lior', 'Eliav', 'LiorEliav', '54321'),
-    ('Amir', 'Kirsh', 'AmirTheKing', 'bestproject');
+    ('Lior', 'Ohana', 'LiorOhana94','$2b$10$k7dsUc2aLcKjkS0CTCuuqOvYjDnO4jZNQWWtKSn37USBCGyvLHHlS'),
+    ('Lior', 'Eliav', 'LiorEliav', '$2b$10$k7dsUc2aLcKjkS0CTCuuqOvYjDnO4jZNQWWtKSn37USBCGyvLHHlS'),
+    ('Amir', 'Kirsh', 'AmirTheKing', '$2b$10$k7dsUc2aLcKjkS0CTCuuqOvYjDnO4jZNQWWtKSn37USBCGyvLHHlS');
 
 INSERT INTO patients (
     first_name,

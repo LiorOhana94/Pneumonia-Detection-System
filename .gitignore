@@ -8,3 +8,5 @@ class-activation-maps/
 scans/
 temp/
 node_modules/
+node-client/public/scans/
+node-client/public/maps/

@@ -9,7 +9,7 @@ CREATE TABLE users (
 
 CREATE TABLE patients (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    patient_id INT NOT NULL UNIQUE,
+    patient_id INT  UNIQUE,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     age INT NOT NULL,
@@ -32,4 +32,10 @@ CREATE TABLE scans (
     FOREIGN KEY (patient_id) REFERENCES patients(id),
     FOREIGN KEY (system_diagnosis_id) REFERENCES diagnosis(id),
     FOREIGN KEY (final_diagnosis_id) REFERENCES diagnosis(id)
+);
+
+CREATE TABLE upload_hashes (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    hash VARCHAR(50) NOT NULL,
+    used BIT(1) DEFAULT 0
 );

@@ -1,6 +1,9 @@
+
 var createError = require('http-errors');
 var express = require('express');
-var db = require('./db/db'); 
+var app = express();
+global.config = require('./config/config')[app.get('env')];
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -8,16 +11,15 @@ const passport = require('passport');
 require('./config/passport')(passport);
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+var db = require('./db/db');
 
 var indexRouter = require('./routes/index');
 var authedRouter = require('./routes/authed');
 var usersRouter = require('./routes/users');
 
-var app = express();
 
 console.log(`using environment: ${app.get('env')}`);
 
-global.config = require('./config/config')[app.get('env')];
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
