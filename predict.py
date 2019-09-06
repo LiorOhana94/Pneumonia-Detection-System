@@ -21,7 +21,7 @@ test_loader = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-def predict(model, image_path, generate_map=False):
+def predict(model, image_path, scan_guid, generate_map=False):
     train_on_gpu = False # torch.cuda.is_available()
     model.eval()   
     model.cpu()
@@ -37,14 +37,14 @@ def predict(model, image_path, generate_map=False):
         outputs = model(image)
 
         if generate_map:
-            heatmap_file_name = create_heatmap_file(sf, outputs, image, image_path)
+            create_heatmap_file(sf, outputs, image, scan_guid)
         
         res = torch.argmax(outputs.data).cpu().detach().numpy()
 
-        return [res, heatmap_file_name]
+        return res
 
 
-def create_heatmap_file(sf, outputs, image, image_path):
+def create_heatmap_file(sf, outputs, image, scan_guid):
     sf.remove()
     arr = sf.features.cpu().detach().numpy()
     features_data = arr[0]
@@ -55,9 +55,9 @@ def create_heatmap_file(sf, outputs, image, image_path):
     plt.subplots(figsize=(4,4))
     plt.imshow(imshow_transform(image))
     plt.imshow(ans, alpha=.4, cmap='jet')
-    cam_path = f'./class-activation-maps/{get_file_name(image_path)}.cam.png'
+    cam_path = f'./class-activation-maps/{scan_guid}.cam.png'
     plt.savefig(cam_path)
-    return cam_path
+    return
 
 
 def get_file_name(file_path):

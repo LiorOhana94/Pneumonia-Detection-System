@@ -6,6 +6,7 @@ from model import model
 from predict import predict as pred
 import torch
 import requests
+from io import BytesIO
 
 labels = ["healthy", "pneumonia"]
 
@@ -21,34 +22,39 @@ app = Flask(__name__)
 def index():
     return "ELI - OHANA =]"
 
-@app.route('/diagnose', methods =  ['POST'])
+@app.route('/predict', methods =  ['POST'])
 def upload_file():
    if request.method == 'POST':
-      f = request.files['file']
-      extension = os.path.splitext(f.filename)[1]
-      filename = uuid.uuid4()
-      path = 'temp-images/%s%s' % (filename, extension)
-      f.save(path)
-      res, heatmap_file_name  = pred(model, path, generate_map=True)
+      response = requests.get(request.json['scan'])
+      scan_guid = request.json['scanGuid']
+      res = pred(model, BytesIO(response.content), scan_guid, generate_map=True)
       print(res)
-      results = { 'result_index': res.tolist(), 'result_text': labels[res], 'heatmap_file_name': heatmap_file_name}
+      results = { 'result_index': res.tolist(), 'result_text': labels[res], 'heatmap_guid': scan_guid}
       return jsonify(results)
 
-@app.route('/send-activation-map', methods =  ['GET'])
+@app.route('/send-activation-map', methods =  ['POST'])
 def send_file():
-      scan_giud = request.args.get('scan_guid')
+      scan_giud = request.json['scanGuid']
+      destination = request.json['destination']
       print(scan_giud)
       if scan_giud is None: 
             abort(405)
-      map_path = f'./class-activation-maps/{scan_giud}.png'
+      map_path = f'./class-activation-maps/{scan_giud}.cam.png'
       
       if not(os.path.exists(map_path)):
             abort(405)
 
-      files = {'file':  (f'{scan_giud}.png', open(map_path, 'rb'), 'image/png')}
-      requests.post("http://127.0.0.1:3000/upload-image/", files=files)
+      files = {'map':  (f'{scan_giud}.map.png', open(map_path, 'rb'), 'image/png')}
+      requests.post(destination, files=files)
       return "ok"
 
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=8080, debug=True)
+
+      """      
+      f = request.files['file']
+      extension = os.path.splitext(f.filename)[1]
+      filename = uuid.uuid4()
+      path = 'temp-images/%s%s' % (filename, extension)
+      f.save(path)"""
