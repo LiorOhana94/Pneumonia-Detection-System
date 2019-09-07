@@ -25,69 +25,41 @@
         </nav>
     </aside>
     <main>
-        <div id="main-columns">
-            <div id="left-column">
-                <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
-                <div class="upload-form">
-                    <input type="file" id="new-file" hidden="hidden" />
-                    <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
-                    <span id="custom-text">No file chosen yet.</span>
+        <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
+        <div class="upload-form">
+            <form action="/authed/diagnoseScan" method="post" enctype="multipart/form-data">
+                <input type="file" id="new-file" name="scan" hidden="hidden" />
+                <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
+                <span id="custom-text">No file chosen yet.</span>
+                <div class="label">Patient's ID:</div>
+                <input type="number" id="id-number" class="inputs-text">
+                <input type="submit" value="Submit" id="submit-file" hidden="hidden">
+            </form>
 
-                    <div>
-                        <div class="label">Patient's ID:</div>
-                        <input type="number" id="id-number" class="inputs-text">
-                    </div>
-                    <input type="button" id="search-id-button" class="buttons-class" value="Submit"
-                        onclick="trySendForDiagnosis()">
+            <input type="button" id="search-id-button" class="buttons-class" value="Submit"
+                onclick="trySendForDiagnosis()">
 
-                    <div id="new-patient" style="display: none;">
-                        <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
-                        </p>
-                        <div class="hidden-class">
-                            <div class="label">First name:</div>
-                            <input type="text" id="first-name-text" class="inputs-text">
-                        </div>
-                        <div class="hidden-class">
-                            <div class="label">Last name:</div>
-                            <input type="text" id="last-name-text" class="inputs-text">
-                        </div>
-                        <div class="hidden-class">
-                            <div class="label">Age:</div>
-                            <input type="number" id="age-number" class="inputs-text">
-                        </div>
-                        <div class="hidden-class">
-                            <div class="label">Phone number:</div>
-                            <input type="text" id="phone-number-text" class="inputs-text">
-                        </div>
-                        <input type="button" id="submit-button" class="buttons-class" value="Submit"
-                            onclick="createNewPatient()">
-                    </div>
+            <div id="new-patient" style="display: none;">
+                <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
+                </p>
+                <div class="hidden-class">
+                    <div class="label">First name:</div>
+                    <input type="text" id="first-name-text" class="inputs-text">
                 </div>
-            </div>
-            <div id="right-column" style="display: none;">
-                <img src="/images/lungs-placeholder.jpg" alt="Chest X-Ray" height="250" width="250" id="scan-img">
-                <div class="scan-info-class">
-                    <div class="label">Scan ID:</div>
-                    <input type="number" id="id-number" class="inputs-text" disabled>
+                <div class="hidden-class">
+                    <div class="label">Last name:</div>
+                    <input type="text" id="last-name-text" class="inputs-text">
                 </div>
-                <div class="scan-info-class">
-                    <div class="label">Patient's ID:</div>
-                    <input type="number" id="id-number" class="inputs-text" disabled>
+                <div class="hidden-class">
+                    <div class="label">Age:</div>
+                    <input type="number" id="age-number" class="inputs-text">
                 </div>
-                <div class="scan-info-class">
-                    <div class="label">Date:</div>
-                    <input type="datetime" id="date-text" class="inputs-text" disabled>
+                <div class="hidden-class">
+                    <div class="label">Phone number:</div>
+                    <input type="text" id="phone-number-text" class="inputs-text">
                 </div>
-                <div class="scan-info-class">
-                    <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
-                    <input type="text" id="system-diagnosis-text" class="inputs-text" disabled>
-                </div>
-                <div class="scan-info-class">
-                    <div class="label">Final diagnosis:</div>
-                    <input type="text" id="final-diagnosis-text" class="inputs-text">
-                    <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
-                        onclick="updateDiagnosis()">
-                </div>
+                <input type="button" id="submit-button" class="buttons-class" value="Submit"
+                    onclick="createNewPatient()">
             </div>
         </div>
     </main>
@@ -107,6 +79,7 @@
     const ageNumber = document.getElementById("age-number");
     const phoneNumberText = document.getElementById("phone-number-text");
     const searchIdButton = document.getElementById("search-id-button");
+    const submitFileButton = document.getElementById("submit-file");
 
     uploadButton.addEventListener("click", function () {
         fileInputElem.click();
@@ -168,19 +141,8 @@
     }
 
     function uploadForDiagnosis() {
-        fetch('/authed/dignoseImage',
-            {
-                method: 'post',
-                body: fileInputElem.files[0],
-                headers:
-                {
-                    'Content-Type': fileInputElem.files[0].type
-                }
-            })
+        submitFileButton.click();
     }
 
-    function updateDiagnosis() {
-
-    }
 
 </script>

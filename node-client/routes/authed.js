@@ -45,6 +45,10 @@ router.get('/uploadPage', function (req, res, next) {
     res.render('upload');
 });
 
+router.get('/t', function (req, res, next) {
+    res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": Date(11/03/2019)}});
+});
+
 router.post('/doesIdExist', async function (req, res, next) {
     console.log(req.body);
     const [results, tableDef] = await db.execute(`Select * from patients where patient_id="${req.body.id}";`);
@@ -74,6 +78,12 @@ router.post('/addPatient', async function (req, res, next) {
     res.status(200).send(true);
 });
 
+router.post('/updateFinalDiagnosis', async function(req, res, next){
+    console.log(req.body);
+    const [results, tableDef] = await db.execute(`UPDATE scans SET final_diagnosis_id=${req.body.finalDiagnosis} WHERE scan_id=${req.body.scanID};`);
+    res.status(200).send(true);
+});
+
 router.post('/dignoseImage', function (req, res, next) {
     console.log(req.body);
     /*
@@ -90,8 +100,7 @@ router.get('/searchPage', function (req, res, next) {
 module.exports = router;
 
 
-router.post(
-    "/diagnoseScan",
+router.post("/diagnoseScan",
     upload.single("scan"),
     async function (req, res, next) {
         try {
@@ -105,14 +114,14 @@ router.post(
             const filename = uuid();
             const targetPath = path.join(__dirname, `../public/scans/${filename}${ext}`);
             if (ext === ".png" || ext === '.jpeg' || ext === '.jpg') {
-                fs.rename(tempPath, targetPath, err => {
+                fs.rename(tempPath, targetPath, async err => {
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    // file saved! update database with scan file name...
+                    await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${req.body.id}, '${filename+ext}')`);
                     req.filename = filename + ext;
-                    req.scanUuid = filename;
+                    req.scanGuid = filename;
                     next();
                 });
             } else {
@@ -139,13 +148,13 @@ router.post(
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 scan: `${global.config.endpoint}/scans/${req.filename}`,
-                scanGuid: req.scanUuid
+                scanGuid: req.scanGuid
             })
         }).then(nnRes => {
             let json = nnRes.json();
             json.then((data) => {
                 console.log("Response from NN: ", data);
-                res.send(data);
+                res.render('diagnosisReview', data);
                 if (data.heatmap_guid) {
                     diagnosisHandler.emit('scanComplete', data.heatmap_guid);
                 }

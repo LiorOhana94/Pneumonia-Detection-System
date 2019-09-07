@@ -26,8 +26,8 @@ CREATE TABLE scans (
     patient_id INT NOT NULL,
     file_name VARCHAR(100) NOT NULL,
     date TIMESTAMP DEFAULT NOW() NOT NULL,
-    system_diagnosis_id INT NOT NULL,
-    final_diagnosis_id INT NOT NULL,
+    system_diagnosis_id INT,
+    final_diagnosis_id INT,
 
     FOREIGN KEY (patient_id) REFERENCES patients(id),
     FOREIGN KEY (system_diagnosis_id) REFERENCES diagnosis(id),

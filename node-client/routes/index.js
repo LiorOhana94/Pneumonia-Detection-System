@@ -16,8 +16,6 @@ var db;
 })();
 
 function validateUser(req, res, next) {
-    next();
-    return;
     if (req.user) {
         res.redirect('/authed');
     } else {

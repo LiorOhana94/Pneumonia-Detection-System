@@ -277,5 +277,11 @@ h4{
 }
 
 #system-diagnosis-text{
-    background-color: #6c96cc;
+    color: #000;
+    font-weight: bold;
 }
+
+.pneumonia{
+    background-color: red;
+}
+
