@@ -27,10 +27,10 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
 
             loss = criterion(outputs, labels)
         
-        TP += torch.sum(preds == labels.data and preds == 1)
-        FP += torch.sum(preds != labels.data and preds == 1)
-        TN += torch.sum(preds == labels.data and preds == 0)
-        FN += torch.sum(preds != labels.data and preds == 0)
+        TP += torch.sum(preds - labels.data*2 == -1)
+        FP += torch.sum(preds - labels.data*2 == 1)
+        TN += torch.sum(preds - labels.data*2 == 0)
+        FN += torch.sum(preds - labels.data*2 == -2)
 
         accuracy = float(running_corrects)/items_num
         recall = float(TP)/(TP + FN)
