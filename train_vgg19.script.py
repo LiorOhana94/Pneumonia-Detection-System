@@ -29,6 +29,7 @@ lr =.0001
 wd =.075
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
 class_weights = torch.Tensor([0.5, 1.0])
+class_weights = class_weights.cuda()
 # ---------------------------------- #
 
 def vgg19():
