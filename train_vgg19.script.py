@@ -27,7 +27,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 num_epochs = 150
 lr =.0001
 wd =.075
-model_name = f"resnet19_{num_epochs}e_{lr}lr"
+model_name = f"resnet19_{num_epochs}e_{lr}lr_imbsam"
 # ---------------------------------- #
 
 def vgg19():
