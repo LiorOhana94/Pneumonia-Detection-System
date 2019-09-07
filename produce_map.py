@@ -15,7 +15,7 @@ image_file = './temp-images/0e387530-1398-495a-b2c3-0717c5ca4a25.jpeg'
 
 for image in os.listdir('./temp-images/'): 
     image_file = f'./temp-images/{image}'
-    print(predict(model,image_file,generate_map=True))
+    print(predict(model,image_file,image[0:-5],generate_map=True))
 
 
 

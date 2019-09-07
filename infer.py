@@ -27,9 +27,9 @@ def upload_file():
    if request.method == 'POST':
       response = requests.get(request.json['scan'])
       scan_guid = request.json['scanGuid']
-      res = pred(model, BytesIO(response.content), scan_guid, generate_map=True)
+      res, prob = pred(model, BytesIO(response.content), scan_guid, generate_map=True)
       print(res)
-      results = { 'result_index': res.tolist(), 'result_text': labels[res], 'heatmap_guid': scan_guid}
+      results = { 'result_index': res.tolist(), 'result_prob': prob.tolist(), 'result_text': labels[res], 'heatmap_guid': scan_guid}
       return jsonify(results)
 
 @app.route('/send-activation-map', methods =  ['POST'])

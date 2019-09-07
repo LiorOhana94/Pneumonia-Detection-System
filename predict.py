@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 
 from cam.network.utils import SaveFeatures, imshow_transform
 
-
 test_loader = transforms.Compose([
     transforms.Resize((224,224)),
     transforms.CenterCrop(224),
@@ -40,8 +39,9 @@ def predict(model, image_path, scan_guid, generate_map=False):
             create_heatmap_file(sf, outputs, image, scan_guid)
         
         res = torch.argmax(outputs.data).cpu().detach().numpy()
+        prob = torch.softmax(outputs, 1)
 
-        return res
+        return res, torch.max(prob)
 
 
 def create_heatmap_file(sf, outputs, image, scan_guid):
@@ -57,6 +57,7 @@ def create_heatmap_file(sf, outputs, image, scan_guid):
     plt.imshow(ans, alpha=.4, cmap='jet')
     cam_path = f'./class-activation-maps/{scan_guid}.cam.png'
     plt.savefig(cam_path)
+    plt.close()
     return
 
 
