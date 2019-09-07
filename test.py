@@ -32,10 +32,10 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
         TN += torch.sum(preds - labels.data*2 == 0)
         FN += torch.sum(preds - labels.data*2 == -2)
 
-        accuracy = float(running_corrects)/items_num
         recall = float(TP)/(TP + FN)
         precision = float(TP)/(TP + FP)
         items_num += inputs.size(0)
+        accuracy = float(running_corrects)/items_num
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
     f = open(f"/storage/tests_results/{testfile_prefix}_test_res_{model_name}.txt" ,"w+")
