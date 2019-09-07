@@ -43,7 +43,7 @@ dataset_sizes = {x : len(dset[x]) for x in ["train","test"]}
 num_threads = 4
 
 #By passing a dataset instance into a DataLoader module, we create dataloader which generates images in batches.
-dataloaders =  {x : { 'loader': torch.utils.data.DataLoader(dset[x], batch_size=256, shuffle=True, num_workers=num_threads, sampler=ImbalancedDatasetSampler(dset[x])), 'length': len(dset[x])}
+dataloaders =  {x : { 'loader': torch.utils.data.DataLoader(dset[x], batch_size=256, num_workers=num_threads, sampler=ImbalancedDatasetSampler(dset[x])), 'length': len(dset[x])}
                for x in categories}
                
                
