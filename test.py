@@ -37,13 +37,13 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
 
         f.write(f"{TP}, {FP}, {TN}, {FN}\n")
 
-        recall = float(TP)/(TP + FN)
-        precision = float(TP)/(TP + FP)
-        f.write(f"then : {recall}, {precision}\n")
+
         items_num += inputs.size(0)
         accuracy = float(running_corrects)/items_num
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
+    recall = float(TP.tolist())/(TP.tolist() + FN.tolist())
+    precision = float(TP.tolist())/(TP.tolist() + FP.tolist())
     f.write(f"Test Results: we got {running_corrects} right out of {items_num}\n")
     f.write(f"Accuracy : {accuracy :.2f}\n")
     f.write(f"Recall : {recall :.2f}\n")
