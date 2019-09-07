@@ -9,12 +9,6 @@ import matplotlib.pyplot as plt
 from torch import nn, optim
 import time
 import copy
-import torchvision.datasets.ImageFolder as ImageFolder
-
-
-class ImageFolderCompensator(ImageFolder):
-    def __init__(self, root, transform=None):
-        super(root, transform)
 
 
 transformers = {'train_transforms' : transforms.Compose([
