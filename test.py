@@ -39,6 +39,7 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
 
         recall = float(TP)/(TP + FN)
         precision = float(TP)/(TP + FP)
+        f.write(f"then : {recall}, {precision}\n")
         items_num += inputs.size(0)
         accuracy = float(running_corrects)/items_num
         running_loss += loss.item() * inputs.size(0)
