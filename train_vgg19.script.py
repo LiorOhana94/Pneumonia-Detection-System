@@ -28,6 +28,7 @@ num_epochs = 150
 lr =.0001
 wd =.075
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
+class_weights = torch.Tensor([0.5, 1.0])
 # ---------------------------------- #
 
 def vgg19():
@@ -90,7 +91,7 @@ valid_loader = torch.utils.data.DataLoader(dataset_valid, batch_size=batch_size,
                                           num_workers=1)
 """
 
-criterion = nn.CrossEntropyLoss(weight=[1, 2])
+criterion = nn.CrossEntropyLoss(weight=class_weights)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
 
