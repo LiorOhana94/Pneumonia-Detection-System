@@ -13,6 +13,8 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
     FP = 0
     TN = 0
     FN = 0
+    precision = 0
+    recall = 0
     f = open(f"/storage/tests_results/{testfile_prefix}_test_res_{model_name}.txt" ,"w+")
 
     for inputs, labels in dataloaders['test']['loader']:
