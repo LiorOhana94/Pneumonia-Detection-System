@@ -39,7 +39,7 @@ def vgg19():
     return model
 
 model = vgg19()
-model.cuda()
+#model.cuda()
 
 
 #freeze layers
