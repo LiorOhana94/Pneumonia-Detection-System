@@ -26,9 +26,9 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 num_epochs = 150
 lr =.0001
-wd =.075
+wd =.05
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
-class_weights = torch.Tensor([0.5, 1.0])
+class_weights = torch.Tensor([0.7, 1.0])
 class_weights = class_weights.cuda()
 # ---------------------------------- #
 
@@ -39,12 +39,12 @@ def vgg19():
     return model
 
 model = vgg19()
-# model.cuda()
+model.cuda()
 
 
 #freeze layers
-for param in model.parameters():
-    param.requires_grad = False
+#for param in model.parameters():
+#    param.requires_grad = False
 
 #modify the last two convolutions
 model.features[-5] = nn.Conv2d(512,512,3, padding=1)
@@ -103,7 +103,6 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-model_name = f"resnet19_{num_epochs}e_{lr}lr_{wd}wd"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
