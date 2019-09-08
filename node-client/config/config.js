@@ -22,7 +22,7 @@ module.exports = {
     user: 'root',
     password: 'eliohana',
     database: 'medikals',
-    endpoint: 'http://10.0.0.4',
+    endpoint: 'http://ec2-52-201-234-115.compute-1.amazonaws.com',
     secret: 'grumpy_blue_cat'
   }
 }
