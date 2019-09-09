@@ -46,7 +46,17 @@ router.get('/uploadPage', function (req, res, next) {
 });
 
 router.get('/t', function (req, res, next) {
-    res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": Date(11/03/2019)}});
+    res.render('diagnosisReview', {
+        data: {
+            "heatmap_guid": "62f1b8cc-3a43-4180-bf18-114b6d6250ac",
+            "result_index": 1,
+            "result_prob": 0.5173879861831665,
+            "result_text": "pneumonia",
+            "scan_id": 746,
+            "patient_id": 8485969,
+            "date": Date(11 / 03 / 2019)
+        }
+    });
 });
 
 router.post('/doesIdExist', async function (req, res, next) {
@@ -78,7 +88,7 @@ router.post('/addPatient', async function (req, res, next) {
     res.status(200).send(true);
 });
 
-router.post('/updateFinalDiagnosis', async function(req, res, next){
+router.post('/updateFinalDiagnosis', async function (req, res, next) {
     console.log(req.body);
     const [results, tableDef] = await db.execute(`UPDATE scans SET final_diagnosis_id=${req.body.finalDiagnosis} WHERE scan_id=${req.body.scanID};`);
     res.status(200).send(true);
@@ -101,6 +111,9 @@ module.exports = router;
 
 
 router.post("/diagnoseScan",
+    function (req, res, next) {
+        next();
+    },
     upload.single("scan"),
     async function (req, res, next) {
         try {
@@ -119,7 +132,15 @@ router.post("/diagnoseScan",
                         console.log(err);
                         return;
                     }
-                    await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${req.body.id}, '${filename+ext}')`);
+                    const [results, tableDef] = await db.execute(`SELECT id FROM patients WHERE patient_id=${req.body.patientId}`);
+
+                    if (results.length === 0) {
+                        console.log("could not find patient");
+                        res.status(405);
+                        return;
+                    }
+
+                    await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${results[0].id}, '${filename + ext}')`);
                     req.filename = filename + ext;
                     req.scanGuid = filename;
                     next();
@@ -162,3 +183,24 @@ router.post("/diagnoseScan",
         })
     }
 );
+
+router.get('/updateEndpoint', function (req, res, next) {
+    if (req.user.id > 2) {
+        res.send(401);
+    } else {
+        next();
+    }
+}, function (req, res, next) {
+    res.render('updateEndpoint');
+});
+
+router.post('/updateEndpoint', function (req, res, next) {
+    if (req.user.id > 2) {
+        res.send(401);
+    } else {
+        next();
+    }
+}, async function (req, res, next) {
+    global.config.nnEndpoint = 'http://' + req.body.endpoint + ':8080';
+    res.render('upload');
+})
