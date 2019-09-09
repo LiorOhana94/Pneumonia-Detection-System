@@ -24,11 +24,11 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 150
-lr =.0001
-wd =.075
+num_epochs = 99
+lr =.0005
+wd =.05
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
-class_weights = torch.Tensor([0.5, 1.0])
+class_weights = torch.Tensor([0.6, 1.0])
 class_weights = class_weights.cuda()
 # ---------------------------------- #
 
@@ -39,12 +39,12 @@ def vgg19():
     return model
 
 model = vgg19()
-# model.cuda()
+#model.cuda()
 
 
 #freeze layers
-for param in model.parameters():
-    param.requires_grad = False
+#for param in model.parameters():
+#    param.requires_grad = False
 
 #modify the last two convolutions
 model.features[-5] = nn.Conv2d(512,512,3, padding=1)
@@ -103,7 +103,6 @@ mean_train_acc = []
 mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
-model_name = f"resnet19_{num_epochs}e_{lr}lr_{wd}wd"
 
 f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
 
@@ -142,14 +141,20 @@ for epoch in range(num_epochs):
         count +=1
 
     f.write('Training loss:  %d %s' % (running_loss/count, '\n'))
-    f.write('Training acc:  %d %s' % (running_corrects.double() / dataloaders['train']['length'], '\n'))
+    f.write('Training acc:  %d %s' % (running_corrects / dataloaders['train']['length'], '\n'))
     train_losses.append(running_loss/count)
-    train_accs.append(running_corrects.double() / dataloaders['train']['length'])
+    train_accs.append(running_corrects / dataloaders['train']['length'])
 
     model.eval()
     count = 0
     val_running_loss = 0.0
     val_running_corrects = 0
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
+    precision = 0
+    recall = 0
 
     for images, labels in dataloaders['val']['loader']:
         images = Variable(images.cuda())
@@ -163,13 +168,24 @@ for epoch in range(num_epochs):
         val_running_loss += loss.item()
         count +=1
 
+        TP += torch.sum(preds - labels.data*2 == -1)
+        FP += torch.sum(preds - labels.data*2 == 1)
+        TN += torch.sum(preds - labels.data*2 == 0)
+        FN += torch.sum(preds - labels.data*2 == -2)
+
     val_acc = val_running_corrects.double()/ dataloaders['val']['length']
     val_accs.append(val_acc)
     val_losses.append(val_running_loss/count)
     
+    recall = float(TP.tolist())/(TP.tolist() + FN.tolist())
+    precision = float(TP.tolist())/(TP.tolist() + FP.tolist())
+    f1_score = 2*(recall * precision) / (recall + precision)
+
     f.write('Validation loss:  %d %s' % (val_running_loss/count, '\n'))
     f.write('Validation accuracy:  %d %s' % (val_acc, '\n'))    
-    
+    f.write(f"Validation Recall : {recall :.2f}\n")
+    f.write(f"Validation Precision : {precision :.2f}\n")
+    f.write(f"Validation F1 Score : {f1_score :.2f}\n")
     mean_val_loss = val_running_loss/count
    
     if val_acc > maxValacc:
@@ -177,13 +193,16 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
+    f.write("###-----------------------------------------------------------------###\n")
+    
 
-plt.figure()
+plt.figure(figsize=(8, 6), dpi=60)
 plt.plot(train_accs, '-p')
 plt.plot(val_accs, '-g')
+plt.ylim(bottom=0)
 plt.savefig(f'/storage/trainlogs/{model_name}_accfig.png')
 
-plt.figure()
+plt.figure(figsize=(8, 6), dpi=60)
 plt.plot(train_losses, '-b')
 plt.plot(val_losses, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')

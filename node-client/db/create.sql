@@ -39,3 +39,8 @@ CREATE TABLE upload_hashes (
     hash VARCHAR(50) NOT NULL,
     used BIT(1) DEFAULT 0
 );
+
+CREATE TABLE endpoint (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    domain_string VARCHAR(255) NOT NULL
+);

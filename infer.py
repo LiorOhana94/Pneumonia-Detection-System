@@ -1,4 +1,7 @@
 import os
+os.putenv('LANG', 'en_US.UTF-8')
+os.putenv('LC_ALL', 'en_US.UTF-8')
+
 from flask import Flask, jsonify, request, abort
 from argparse import ArgumentParser
 import uuid
@@ -15,6 +18,7 @@ parser.add_argument("-m", "--model", dest="model",
                     help="location of the pickle file")
 
 filename = parser.parse_args().model
+
 
 app = Flask(__name__)
 

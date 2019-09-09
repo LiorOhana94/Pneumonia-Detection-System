@@ -46,7 +46,21 @@ router.get('/uploadPage', function (req, res, next) {
 });
 
 router.get('/t', function (req, res, next) {
+<<<<<<< HEAD
     res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": "11/03/2019"}});
+=======
+    res.render('diagnosisReview', {
+        data: {
+            "heatmap_guid": "62f1b8cc-3a43-4180-bf18-114b6d6250ac",
+            "result_index": 1,
+            "result_prob": 0.5173879861831665,
+            "result_text": "pneumonia",
+            "scan_id": 746,
+            "patient_id": 8485969,
+            "date": Date(11 / 03 / 2019)
+        }
+    });
+>>>>>>> master
 });
 
 router.post('/doesIdExist', async function (req, res, next) {
@@ -78,7 +92,7 @@ router.post('/addPatient', async function (req, res, next) {
     res.status(200).send(true);
 });
 
-router.post('/updateFinalDiagnosis', async function(req, res, next){
+router.post('/updateFinalDiagnosis', async function (req, res, next) {
     console.log(req.body);
     const [results, tableDef] = await db.execute(`UPDATE scans SET final_diagnosis_id=${req.body.finalDiagnosis} WHERE scan_id=${req.body.scanID};`);
     res.status(200).send(true);
@@ -101,6 +115,9 @@ module.exports = router;
 
 
 router.post("/diagnoseScan",
+    function (req, res, next) {
+        next();
+    },
     upload.single("scan"),
     async function (req, res, next) {
         try {
@@ -119,8 +136,19 @@ router.post("/diagnoseScan",
                         console.log(err);
                         return;
                     }
-                    await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${req.body.id}, '${filename+ext}')`);
+                    let [results, tableDef] = await db.execute(`SELECT id FROM patients WHERE patient_id=${req.body.patientId}`);
+
+                    if (results.length === 0) {
+                        console.log("could not find patient");
+                        res.status(405);
+                        return;
+                    }
+                    req.patientId = results[0].id;
+
+                    results = await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${results[0].id}, '${filename + ext}')`);
                     req.filename = filename + ext;
+                    req.scanId = results.insertId;
+                    req.scanDate = new Date();
                     req.scanGuid = filename;
                     next();
                 });
@@ -143,7 +171,7 @@ router.post("/diagnoseScan",
         }
     },
     async function (req, res, next) {
-        fetch(global.config.nnEndpoint + '/predict', {
+        fetch(global.nnEndpoint + '/predict', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -153,12 +181,52 @@ router.post("/diagnoseScan",
         }).then(nnRes => {
             let json = nnRes.json();
             json.then((data) => {
+                req.nnResponse = data;
                 console.log("Response from NN: ", data);
-                res.render('diagnosisReview', data);
+                next();
                 if (data.heatmap_guid) {
-                    diagnosisHandler.emit('scanComplete', data.heatmap_guid);
+                    diagnosisHandler.emit('mapGenerated', data.heatmap_guid);
                 }
             })
         })
+    },
+
+    async function (req, res, next) {
+        let locals = {
+            "heatmap_guid": req.nnResponse['heatmap_guid'],
+            "result_index": req.nnResponse['result_index'],
+            "result_prob": req.nnResponse['result_prob'],
+            "result_text": req.nnResponse['result_text'],
+            "scan_id": req.scanId,
+            "patient_id": req.patientId,
+            "date": req.scanDate
+        };
+        console.log(locals);
+        res.render('diagnosisReview', locals);
     }
 );
+
+router.get('/updateEndpoint', function (req, res, next) {
+    if (req.user.id > 2) {
+        res.send(401);
+    } else {
+        next();
+    }
+}, function (req, res, next) {
+    res.render('updateEndpoint', {success: false});
+});
+
+router.post('/updateEndpoint', function (req, res, next) {
+    if (req.user.id > 2) {
+        res.send(401);
+    } else {
+        next();
+    }
+}, async function (req, res, next) {
+    let nnEndpoint = 'http://' + req.body.endpoint + ':8080';
+
+    await db.execute(`UPDATE endpoint SET domain_string="${nnEndpoint}" where id=1;`);
+    global.nnEndpoint = nnEndpoint;
+
+    res.render('updateEndpoint', {success: true});
+})

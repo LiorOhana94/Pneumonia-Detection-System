@@ -2,11 +2,14 @@
 *.pyc
 storage/
 temp-images/
-class-activation-maps/
+class-activation-maps/*.png
 
 .idea/
 scans/
 temp/
 node_modules/
-node-client/public/scans/
-node-client/public/maps/
+node-client/public/scans/*.png
+node-client/public/scans/*.jpg
+node-client/public/scans/*.jpeg
+
+node-client/public/maps/*.png

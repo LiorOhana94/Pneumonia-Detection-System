@@ -12,12 +12,12 @@ class DiagnosisHandler extends eventEmitter {}
 const diagnosisHandler = new DiagnosisHandler();
 
 
-diagnosisHandler.on('scanComplete', async function (activationMapGuid) {
+diagnosisHandler.on('mapGenerated', async function (activationMapGuid) {
     const guid = uuid();
 
     await db.execute(`INSERT INTO upload_hashes (hash) values("${guid}")`);
 
-    fetch(`${global.config.nnEndpoint}/send-activation-map`, {
+    fetch(`${global.nnEndpoint}/send-activation-map`, {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
