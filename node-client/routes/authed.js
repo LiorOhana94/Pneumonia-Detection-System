@@ -132,16 +132,19 @@ router.post("/diagnoseScan",
                         console.log(err);
                         return;
                     }
-                    const [results, tableDef] = await db.execute(`SELECT id FROM patients WHERE patient_id=${req.body.patientId}`);
+                    let [results, tableDef] = await db.execute(`SELECT id FROM patients WHERE patient_id=${req.body.patientId}`);
 
                     if (results.length === 0) {
                         console.log("could not find patient");
                         res.status(405);
                         return;
                     }
+                    req.patientId = results[0].id;
 
-                    await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${results[0].id}, '${filename + ext}')`);
+                    results = await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${results[0].id}, '${filename + ext}')`);
                     req.filename = filename + ext;
+                    req.scanId = results.insertId;
+                    req.scanDate = new Date();
                     req.scanGuid = filename;
                     next();
                 });
@@ -164,7 +167,7 @@ router.post("/diagnoseScan",
         }
     },
     async function (req, res, next) {
-        fetch(global.config.nnEndpoint + '/predict', {
+        fetch(global.nnEndpoint + '/predict', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -174,13 +177,28 @@ router.post("/diagnoseScan",
         }).then(nnRes => {
             let json = nnRes.json();
             json.then((data) => {
+                req.nnResponse = data;
                 console.log("Response from NN: ", data);
-                res.render('diagnosisReview', data);
+                next();
                 if (data.heatmap_guid) {
-                    diagnosisHandler.emit('scanComplete', data.heatmap_guid);
+                    diagnosisHandler.emit('mapGenerated', data.heatmap_guid);
                 }
             })
         })
+    },
+
+    async function (req, res, next) {
+        let locals = {
+            "heatmap_guid": req.nnResponse['heatmap_guid'],
+            "result_index": req.nnResponse['result_index'],
+            "result_prob": req.nnResponse['result_prob'],
+            "result_text": req.nnResponse['result_text'],
+            "scan_id": req.scanId,
+            "patient_id": req.patientId,
+            "date": req.scanDate
+        };
+        console.log(locals);
+        res.render('diagnosisReview', locals);
     }
 );
 
@@ -191,7 +209,7 @@ router.get('/updateEndpoint', function (req, res, next) {
         next();
     }
 }, function (req, res, next) {
-    res.render('updateEndpoint');
+    res.render('updateEndpoint', {success: false});
 });
 
 router.post('/updateEndpoint', function (req, res, next) {
@@ -201,6 +219,10 @@ router.post('/updateEndpoint', function (req, res, next) {
         next();
     }
 }, async function (req, res, next) {
-    global.config.nnEndpoint = 'http://' + req.body.endpoint + ':8080';
-    res.render('upload');
+    let nnEndpoint = 'http://' + req.body.endpoint + ':8080';
+
+    await db.execute(`UPDATE endpoint SET domain_string="${nnEndpoint}" where id=1;`);
+    global.nnEndpoint = nnEndpoint;
+
+    res.render('updateEndpoint', {success: true});
 })

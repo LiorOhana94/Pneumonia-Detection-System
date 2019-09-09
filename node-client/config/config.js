@@ -17,10 +17,18 @@ module.exports = {
     endpoint: 'http://192.168.43.182:3000',
     nnEndpoint: 'http://192.168.43.82:8080'
   },
+  qa: {
+    host: 'localhost',
+    user: 'root',
+    password: 'eliohana1',
+    database: 'medikals',
+    endpoint: 'http://ec2-52-201-234-115.compute-1.amazonaws.com',
+    secret: 'grumpy_blue_cat'
+  },
   production: {
     host: 'localhost',
     user: 'root',
-    password: 'eliohana',
+    password: 'eliohana1',
     database: 'medikals',
     endpoint: 'http://ec2-52-201-234-115.compute-1.amazonaws.com',
     secret: 'grumpy_blue_cat'

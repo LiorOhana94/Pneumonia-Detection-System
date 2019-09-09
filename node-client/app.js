@@ -3,7 +3,6 @@ var createError = require('http-errors');
 var express = require('express');
 var app = express();
 global.config = require('./config/config')[app.get('env')];
-
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -11,15 +10,22 @@ const passport = require('passport');
 require('./config/passport')(passport);
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-var db = require('./db/db');
+
+var db;
+(async function () {
+    db = await require('./db/db');
+
+    let [results, tableDef] = await db.execute('SELECT domain_string from endpoint where id=1;');
+    if(results.length > 0){
+        global.nnEndpoint = results[0]['domain_string'];
+    }
+})();
 
 var indexRouter = require('./routes/index');
 var authedRouter = require('./routes/authed');
 var usersRouter = require('./routes/users');
 
-
 console.log(`using environment: ${app.get('env')}`);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
