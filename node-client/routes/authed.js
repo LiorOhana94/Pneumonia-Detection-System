@@ -46,7 +46,7 @@ router.get('/uploadPage', function (req, res, next) {
 });
 
 router.get('/t', function (req, res, next) {
-    res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": Date(11/03/2019)}});
+    res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": "11/03/2019"}});
 });
 
 router.post('/doesIdExist', async function (req, res, next) {
