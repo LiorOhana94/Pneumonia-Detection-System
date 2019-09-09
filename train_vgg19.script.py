@@ -196,13 +196,13 @@ for epoch in range(num_epochs):
     f.write("###-----------------------------------------------------------------###\n")
     
 
-plt.figure()
+plt.figure(figsize=(8, 6), dpi=60)
 plt.plot(train_accs, '-p')
 plt.plot(val_accs, '-g')
 plt.ylim(bottom=0)
 plt.savefig(f'/storage/trainlogs/{model_name}_accfig.png')
 
-plt.figure()
+plt.figure(figsize=(8, 6), dpi=60)
 plt.plot(train_losses, '-b')
 plt.plot(val_losses, '-g')
 plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
