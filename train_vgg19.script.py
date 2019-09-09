@@ -28,7 +28,7 @@ num_epochs = 99
 lr =.0005
 wd =.05
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
-class_weights = torch.Tensor([0.7, 1.0])
+class_weights = torch.Tensor([0.6, 1.0])
 class_weights = class_weights.cuda()
 # ---------------------------------- #
 
@@ -140,10 +140,10 @@ for epoch in range(num_epochs):
         running_loss += loss.item()
         count +=1
 
-    f.write('Training loss:  %d %s' % (running_loss.double()/count, '\n'))
-    f.write('Training acc:  %d %s' % (running_corrects.double() / dataloaders['train']['length'], '\n'))
+    f.write('Training loss:  %d %s' % (running_loss/count, '\n'))
+    f.write('Training acc:  %d %s' % (running_corrects / dataloaders['train']['length'], '\n'))
     train_losses.append(running_loss/count)
-    train_accs.append(running_corrects.double() / dataloaders['train']['length'])
+    train_accs.append(running_corrects / dataloaders['train']['length'])
 
     model.eval()
     count = 0
@@ -181,7 +181,7 @@ for epoch in range(num_epochs):
     precision = float(TP.tolist())/(TP.tolist() + FP.tolist())
     f1_score = 2*(recall * precision) / (recall + precision)
 
-    f.write('Validation loss:  %d %s' % (val_running_loss.double()/count, '\n'))
+    f.write('Validation loss:  %d %s' % (val_running_loss/count, '\n'))
     f.write('Validation accuracy:  %d %s' % (val_acc, '\n'))    
     f.write(f"Validation Recall : {recall :.2f}\n")
     f.write(f"Validation Precision : {precision :.2f}\n")
