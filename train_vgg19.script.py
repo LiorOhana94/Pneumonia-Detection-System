@@ -177,9 +177,9 @@ for epoch in range(num_epochs):
     val_accs.append(val_acc)
     val_losses.append(val_running_loss/count)
     
-    recall = float(TP.tolist())/(TP.tolist() + FN.tolist())
-    precision = float(TP.tolist())/(TP.tolist() + FP.tolist())
-    f1_score = 2*(recall * precision) / (recall + precision)
+    recall = float(TP.tolist())/(TP.tolist() + FN.tolist() + 0.1)
+    precision = float(TP.tolist())/(TP.tolist() + FP.tolist() + 0.1)
+    f1_score = 2*(recall * precision) / (recall + precision  + 0.1)
 
     f.write('Validation loss:  %d %s' % (val_running_loss/count, '\n'))
     f.write('Validation accuracy:  %d %s' % (val_acc, '\n'))    
