@@ -46,9 +46,6 @@ router.get('/uploadPage', function (req, res, next) {
 });
 
 router.get('/t', function (req, res, next) {
-<<<<<<< HEAD
-    res.render('diagnosisReview', {data : {"heatmap_guid":"62f1b8cc-3a43-4180-bf18-114b6d6250ac","result_index":1,"result_prob":0.5173879861831665,"result_text":"pneumonia", "scan_id": 746, "patient_id": 8485969, "date": "11/03/2019"}});
-=======
     res.render('diagnosisReview', {
         data: {
             "heatmap_guid": "62f1b8cc-3a43-4180-bf18-114b6d6250ac",
@@ -60,7 +57,6 @@ router.get('/t', function (req, res, next) {
             "date": Date(11 / 03 / 2019)
         }
     });
->>>>>>> master
 });
 
 router.post('/doesIdExist', async function (req, res, next) {
@@ -192,6 +188,8 @@ router.post("/diagnoseScan",
     },
 
     async function (req, res, next) {
+        await db.execute(`UPDATE scans set system_diagnosis_id=${req.nnResponse['result_text'] === 'pneumonia'? 1 : 2} where id=${req.scanId}`);
+
         let locals = {
             data: {
                 "heatmap_guid": req.nnResponse['heatmap_guid'],

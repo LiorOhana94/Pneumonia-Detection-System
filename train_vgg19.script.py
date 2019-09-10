@@ -25,10 +25,10 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 
 num_epochs = 99
-lr =.0005
-wd =.05
+lr =.0001
+wd =.03
 model_name = f"resnet19_v3_{num_epochs}e_{lr}lr_imbsam"
-class_weights = torch.Tensor([0.6, 1.0])
+class_weights = torch.Tensor([0.8, 1.0])
 class_weights = class_weights.cuda()
 # ---------------------------------- #
 
