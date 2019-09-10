@@ -143,7 +143,7 @@ router.post("/diagnoseScan",
 
                     results = await db.execute(`INSERT INTO scans (patient_id, file_name) VALUES(${results[0].id}, '${filename + ext}')`);
                     req.filename = filename + ext;
-                    req.scanId = results.insertId;
+                    req.scanId = results[0].insertId;
                     req.scanDate = new Date();
                     req.scanGuid = filename;
                     next();
@@ -189,13 +189,15 @@ router.post("/diagnoseScan",
 
     async function (req, res, next) {
         let locals = {
-            "heatmap_guid": req.nnResponse['heatmap_guid'],
-            "result_index": req.nnResponse['result_index'],
-            "result_prob": req.nnResponse['result_prob'],
-            "result_text": req.nnResponse['result_text'],
-            "scan_id": req.scanId,
-            "patient_id": req.patientId,
-            "date": req.scanDate
+            data: {
+                "heatmap_guid": req.nnResponse['heatmap_guid'],
+                "result_index": req.nnResponse['result_index'],
+                "result_prob": req.nnResponse['result_prob'],
+                "result_text": req.nnResponse['result_text'],
+                "scan_id": req.scanId,
+                "patient_id": req.patientId,
+                "date": req.scanDate
+            }
         };
         console.log(locals);
         res.render('diagnosisReview', locals);

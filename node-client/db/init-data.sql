@@ -23,3 +23,5 @@ VALUES
 INSERT INTO diagnosis (name)
 VALUES ("Unknown"), ("Positive"), ("Negative");
 
+INSERT INTO endpoint (domain_string) VALUES ('');
+
