@@ -1,0 +1,49 @@
+
+body{
+display: block;
+}
+
+#diagnosis-div{
+    background: #ffffff;
+    padding: 2em 4em;
+    position: fixed;
+    right: 33%;
+    left: auto;
+    display: inline-block;
+}
+
+.scan-info-class{
+    display: flex;
+}
+
+.update-button{
+    margin: 0;
+    height: 38px;
+}
+
+#scan-img{
+    display: block;
+    margin-bottom: 10px;
+    margin-left: 20%;
+    margin-right: 20%
+}
+
+#system-diagnosis-label{
+    font-weight: 700;
+}
+
+#system-diagnosis-text{
+    color: #000;
+    font-weight: bold;
+    width: 160px;
+}
+
+.pneumonia{
+    background-color: red;
+}
+
+#close-button{
+    width: 40%;
+    margin-left: 30%;
+    margin-right: 30%
+}

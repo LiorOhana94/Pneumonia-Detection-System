@@ -250,38 +250,3 @@ h4{
     margin-top: 10px;
 }
 
-.scan-info-class{
-    display: flex;
-}
-
-#main-columns{
-    display: grid;
-    width: 100%;
-    grid-template-columns: 50% auto;
-}
-
-.update-button{
-    margin: 0;
-    height: 38px;
-}
-
-#scan-img{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
-}
-
-#system-diagnosis-label{
-    font-weight: 700;
-}
-
-#system-diagnosis-text{
-    color: #000;
-    font-weight: bold;
-}
-
-.pneumonia{
-    background-color: red;
-}
-
