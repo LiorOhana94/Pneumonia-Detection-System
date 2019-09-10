@@ -250,3 +250,7 @@ h4{
     margin-top: 10px;
 }
 
+.medikals-header-container{
+    display: flex;
+    align-items: center;
+}

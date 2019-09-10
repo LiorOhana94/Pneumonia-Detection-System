@@ -11,35 +11,38 @@
 </head>
 
 <body>
-    <div id="diagnosis-div">
+<div id="diagnosis-div">
+    <div class="medikals-header-container">
         <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
-
-        <img src="/maps/<%=data['heatmap_guid']%>.map.png" alt="Chest X-Ray" height="250" width="250" id="scan-img">
-        <div class="scan-info-class">
-            <div class="label">Scan ID:</div>
-            <input type="number" id="scan-id-number" class="inputs-text" value="<%=data['scan_id']%>" disabled>
-        </div>
-        <div class="scan-info-class">
-            <div class="label">Patient's ID:</div>
-            <input type="number" id="patient-id-number" class="inputs-text" value="<%=data['patient_id']%>" disabled>
-        </div>
-        <div class="scan-info-class">
-            <div class="label">Date:</div>
-            <input type="datetime" id="date-text" class="inputs-text" value="<%=data['date']%>" disabled>
-        </div>
-        <div class="scan-info-class">
-            <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
-            <input type="text" id="system-diagnosis-text" class="inputs-text <%=data['result_text']%>"
-                value="<%=data['result_text']%>" disabled>
-        </div>
-        <div class="scan-info-class">
-            <div class="label">Final diagnosis:</div>
-            <input type="text" id="final-diagnosis-text" class="inputs-text">
-            <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
-                onclick="updateDiagnosis()">
-        </div>
-        <a href="/"><button class="buttons-class" id="close-button" type="button" >Done</button></a>
     </div>
+    <img src="/maps/<%= data['heatmap_guid'] %>.map.png" alt="Chest X-Ray" height="250" width="250" id="scan-img">
+    <div class="scan-info-class">
+        <div class="label">Scan ID:</div>
+        <input type="number" id="scan-id-number" class="inputs-text" value="<%= data['scan_id'] %>" disabled>
+    </div>
+    <div class="scan-info-class">
+        <div class="label">Patient's ID:</div>
+        <input type="number" id="patient-id-number" class="inputs-text" value="<%= data['patient_id'] %>" disabled>
+    </div>
+    <div class="scan-info-class">
+        <div class="label">Date:</div>
+        <input type="datetime" id="date-text" class="inputs-text" value="<%= data['date'] %>" disabled>
+    </div>
+    <div class="scan-info-class">
+        <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
+        <input type="text" id="system-diagnosis-text" class="inputs-text <%= data['result_text'] %>"
+               value="<%= data['result_text'] %>" disabled>
+    </div>
+    <div class="scan-info-class">
+        <div class="label">Final diagnosis:</div>
+        <input type="text" id="final-diagnosis-text" class="inputs-text">
+        <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
+               onclick="updateDiagnosis()">
+    </div>
+    <a href="/">
+        <button class="buttons-class" id="close-button" type="button">Done</button>
+    </a>
+</div>
 </body>
 
 </html>

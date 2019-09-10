@@ -9,13 +9,15 @@
 </head>
 <body>
 <div class="loginbox">
-    <img src="/images/user-avatar.jpg" class="loginavatar">
+    <div class="medikals-header-container">
+        <img src="/images/user-avatar.jpg" class="loginavatar">
+    </div>
     <h4>Welcome Admin</h4>
     <form action="/authed/updateEndpoint" method="POST">
         <p>Current Endpoint</p>
         <input name="endpoint" type="password" id="password-text" class="inputs-text" placeholder="Enter Password">
         <input type="submit" id="submit-button" value="Update"></br>
-        <%success ? '<h6>Updated!</h6>' : ''%>
+        <% success ? '<h6>Updated!</h6>' : '' %>
     </form>
 </div>
 </body>

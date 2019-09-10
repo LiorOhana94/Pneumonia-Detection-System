@@ -11,31 +11,33 @@
 </head>
 
 <body>
-    <aside>
-        <figure>
-            <div id="avatar"></div>
-            <figcaption>Lior Ohana</figcaption>
-        </figure>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/authed/aboutPage">About</a></li>
-                <li><a href="/authed/uploadPage">Upload</a></li>
-                <li><a href="/authed/searchPage">Search</a></li>
-            </ul>
-        </nav>
-    </aside>
-    <main>
+<aside>
+    <figure>
+        <div id="avatar"></div>
+        <figcaption>Lior Ohana</figcaption>
+    </figure>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/authed/aboutPage">About</a></li>
+            <li><a href="/authed/uploadPage">Upload</a></li>
+            <li><a href="/authed/searchPage">Search</a></li>
+        </ul>
+    </nav>
+</aside>
+<main>
+    <div class="medikals-header-container">
         <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
-        <form>
-            <input type="number" id="scan-id-number" placeholder="Enter Scan ID" />
-            <div id="scan-not-found" style="display: none;">
-                <p><b>Scan not found.</b> </br>Please re-enter scan ID.</p>
-            </div>
-            <input class="buttons-class" id="search-button" type="button" value="Search" onclick="searchScanById()">
-        </form>
+    </div>
+    <form>
+        <input type="number" id="scan-id-number" placeholder="Enter Scan ID"/>
+        <div id="scan-not-found" style="display: none;">
+            <p><b>Scan not found.</b> </br>Please re-enter scan ID.</p>
+        </div>
+        <input class="buttons-class" id="search-button" type="button" value="Search" onclick="searchScanById()">
+    </form>
 
-    </main>
+</main>
 </body>
 
 </html>
@@ -63,8 +65,7 @@
                 console.log(scanInfo);
                 if (!scanInfo.found) {
                     //scan not found
-                }
-                else {
+                } else {
                     //display scan details - redirect to diagnosisReview
                 }
             });

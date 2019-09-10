@@ -10,59 +10,61 @@
 </head>
 
 <body>
-    <aside>
-        <figure>
-            <div id="avatar"></div>
-            <figcaption>Lior Ohana</figcaption>
-        </figure>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/authed/aboutPage">About</a></li>
-                <li><a href="/authed/uploadPage">Upload</a></li>
-                <li><a href="/authed/searchPage">Search</a></li>
-            </ul>
-        </nav>
-    </aside>
-    <main>
+<aside>
+    <figure>
+        <div id="avatar"></div>
+        <figcaption>Lior Ohana</figcaption>
+    </figure>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/authed/aboutPage">About</a></li>
+            <li><a href="/authed/uploadPage">Upload</a></li>
+            <li><a href="/authed/searchPage">Search</a></li>
+        </ul>
+    </nav>
+</aside>
+<main>
+    <div class="medikals-header-container">
         <h3>Medikals <img src="/images/Medikals.jpg" alt="Logo"></h3>
-        <div class="upload-form">
-            <form action="/authed/diagnoseScan" method="post" enctype="multipart/form-data">
-                <input type="file" id="new-file" name="scan" hidden="hidden" />
-                <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
-                <span id="custom-text">No file chosen yet.</span>
-                <div class="label">Patient's ID:</div>
-                <input name="patientId" type="number" id="id-number" class="inputs-text">
-                <input type="submit" value="Submit" id="submit-file" hidden="hidden">
-            </form>
+    </div>
+    <div class="upload-form">
+        <form action="/authed/diagnoseScan" method="post" enctype="multipart/form-data">
+            <input type="file" id="new-file" name="scan" hidden="hidden"/>
+            <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
+            <span id="custom-text">No file chosen yet.</span>
+            <div class="label">Patient's ID:</div>
+            <input name="patientId" type="number" id="id-number" class="inputs-text">
+            <input type="submit" value="Submit" id="submit-file" hidden="hidden">
+        </form>
 
-            <input type="button" id="search-id-button" class="buttons-class" value="Submit"
-                onclick="trySendForDiagnosis()">
+        <input type="button" id="search-id-button" class="buttons-class" value="Submit"
+               onclick="trySendForDiagnosis()">
 
-            <div id="new-patient" style="display: none;">
-                <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
-                </p>
-                <div class="hidden-class">
-                    <div class="label">First name:</div>
-                    <input type="text" id="first-name-text" class="inputs-text">
-                </div>
-                <div class="hidden-class">
-                    <div class="label">Last name:</div>
-                    <input type="text" id="last-name-text" class="inputs-text">
-                </div>
-                <div class="hidden-class">
-                    <div class="label">Age:</div>
-                    <input type="number" id="age-number" class="inputs-text">
-                </div>
-                <div class="hidden-class">
-                    <div class="label">Phone number:</div>
-                    <input type="text" id="phone-number-text" class="inputs-text">
-                </div>
-                <input type="button" id="submit-button" class="buttons-class" value="Submit"
-                    onclick="createNewPatient()">
+        <div id="new-patient" style="display: none;">
+            <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
+            </p>
+            <div class="hidden-class">
+                <div class="label">First name:</div>
+                <input type="text" id="first-name-text" class="inputs-text">
             </div>
+            <div class="hidden-class">
+                <div class="label">Last name:</div>
+                <input type="text" id="last-name-text" class="inputs-text">
+            </div>
+            <div class="hidden-class">
+                <div class="label">Age:</div>
+                <input type="number" id="age-number" class="inputs-text">
+            </div>
+            <div class="hidden-class">
+                <div class="label">Phone number:</div>
+                <input type="text" id="phone-number-text" class="inputs-text">
+            </div>
+            <input type="button" id="submit-button" class="buttons-class" value="Submit"
+                   onclick="createNewPatient()">
         </div>
-    </main>
+    </div>
+</main>
 </body>
 
 </html>
@@ -88,8 +90,7 @@
     fileInputElem.addEventListener("change", function () {
         if (fileInputElem.value) {
             customText.innerHTML = fileInputElem.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
-        }
-        else {
+        } else {
             customText.innerHTML = "No file chosen yet.";
         }
     });
@@ -114,8 +115,7 @@
                 if (!idExist) {
                     newPatientDiv.style.display = "block";
                     searchIdButton.style.display = "none";
-                }
-                else {
+                } else {
                     uploadForDiagnosis();
                 }
             });
