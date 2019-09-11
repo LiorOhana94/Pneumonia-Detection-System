@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+import datetime
 """
 from skimage.transform import resize
 from skimage.io import imshow
@@ -23,12 +23,14 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # Almog is in the house
 
 # ----- Training Configuration ----- #
-
+date = datetime.datetime.now()
+time_str = date.strftime("%m%d")
 num_epochs = 30
 lr =.00005
 wd =.001
+loss='nll'
 class_weights = [0.7, 1.0]
-model_name = f"res50v2_{num_epochs}e_{lr}lr_{wd}wd_cw{class_weights}"
+model_name = f"{time_str}_res50v2_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
 # ---------------------------------- #
@@ -43,7 +45,12 @@ model = torchvision.models.resnet50(pretrained=False, num_classes=2)
 #    param.requires_grad = False
 
 
-criterion = nn.CrossEntropyLoss(weight=class_weights)
+criterion = None
+if loss == 'nll':
+    criterion = nn.NLLLoss(weight=class_weights)
+else:
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
+
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
 
@@ -55,7 +62,7 @@ mean_val_acc = []
 minLoss = 99999
 maxValacc = -99999
 
-f = open("/storage/trainlogs/log_%s.txt" % model_name,"w+")
+f = open("/storage/trainlogs/%s_trainlog.txt" % model_name,"w+")
 
 train_accs = []
 train_losses = []
