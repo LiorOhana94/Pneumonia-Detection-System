@@ -26,8 +26,8 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 num_epochs = 50
 lr =.0001
-wd =.03
-class_weights = [1.0, 1.0]
+wd =.05
+class_weights = [0.7, 1.0]
 model_name = f"resnet50_v2_{num_epochs}e_{lr}lr_imbsam"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
