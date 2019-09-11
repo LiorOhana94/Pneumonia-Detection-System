@@ -95,7 +95,7 @@ for epoch in range(num_epochs):
     f.write(f'Training loss: {running_loss/count}\n')
     f.write(f'Training accuracy: {train_acc}\n')    
     train_losses.append(running_loss/count)
-    train_accs.appendtrain_acc)
+    train_accs.append(train_acc)
 
     model.eval()
     count = 0
