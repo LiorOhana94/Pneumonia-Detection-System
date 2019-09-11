@@ -28,7 +28,7 @@ num_epochs = 50
 lr =.0001
 wd =.0
 class_weights = [0.7, 1.0]
-model_name = f"resnet50_v2_{num_epochs}e_{lr}lr_imbsam"
+model_name = f"res50v2_{num_epochs}e_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
 # ---------------------------------- #
