@@ -181,8 +181,8 @@ for epoch in range(num_epochs):
     precision = float(TP.tolist())/(TP.tolist() + FP.tolist() + 0.1)
     f1_score = 2*(recall * precision) / (recall + precision  + 0.1)
 
-    f.write('Validation loss:  %d %s' % (val_running_loss/count, '\n'))
-    f.write('Validation accuracy:  %d %s' % (val_acc, '\n'))    
+    f.write(f'Validation loss: {val_running_loss/count}\n')
+    f.write(f'Validation accuracy: {val_acc}\n')   
     f.write(f"Validation Recall : {recall :.2f}\n")
     f.write(f"Validation Precision : {precision :.2f}\n")
     f.write(f"Validation F1 Score : {f1_score :.2f}\n")
