@@ -24,9 +24,9 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 60
+num_epochs = 30
 lr =.00005
-wd =.0
+wd =.001
 class_weights = [0.7, 1.0]
 model_name = f"res50v2_{num_epochs}e_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
@@ -146,7 +146,6 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
-        if maxValacc > .85 and maxValacc < .9 : break
     f.write("###-----------------------------------------------------------------###\n")
     
 
