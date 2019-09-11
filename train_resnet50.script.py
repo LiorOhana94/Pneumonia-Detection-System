@@ -24,8 +24,8 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 
 # ----- Training Configuration ----- #
 
-num_epochs = 50
-lr =.0001
+num_epochs = 60
+lr =.00005
 wd =.0
 class_weights = [0.7, 1.0]
 model_name = f"res50v2_{num_epochs}e_{lr}lr_{wd}wd_cw{class_weights}"
@@ -71,6 +71,7 @@ for epoch in range(num_epochs):
     running_corrects = 0
     model.train()
     count = 0
+    train_len = 0
 
     for images, labels in dataloaders['train']['loader']:        
         images = Variable(images.cuda())
@@ -84,20 +85,21 @@ for epoch in range(num_epochs):
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
 
-        
+        train_len += len(images)
         loss.backward()
         optimizer.step()        
         
         running_loss += loss.item()
         count +=1
-
-    f.write('Training loss:  %d %s' % (running_loss/count, '\n'))
-    f.write('Training acc:  %d %s' % (running_corrects / dataloaders['train']['length'], '\n'))
+    train_acc = running_corrects.double() / train_len
+    f.write(f'Training loss: {running_loss/count}\n')
+    f.write(f'Training accuracy: {train_acc}\n')    
     train_losses.append(running_loss/count)
-    train_accs.append(running_corrects / dataloaders['train']['length'])
+    train_accs.appendtrain_acc)
 
     model.eval()
     count = 0
+    val_len = 0
     val_running_loss = 0.0
     val_running_corrects = 0
     TP = 0
@@ -118,13 +120,13 @@ for epoch in range(num_epochs):
 
         val_running_loss += loss.item()
         count +=1
-
+        val_len += len(images)
         TP += torch.sum(preds - labels.data*2 == -1)
         FP += torch.sum(preds - labels.data*2 == 1)
         TN += torch.sum(preds - labels.data*2 == 0)
         FN += torch.sum(preds - labels.data*2 == -2)
 
-    val_acc = val_running_corrects.double()/ dataloaders['val']['length']
+    val_acc = val_running_corrects.double()/ val_len
     val_accs.append(val_acc)
     val_losses.append(val_running_loss/count)
     
@@ -144,6 +146,7 @@ for epoch in range(num_epochs):
         f.write(f'NEW BEST Val Acc: {val_acc} old best:{maxValacc}\n')
         maxValacc = val_acc
         best_model = model
+        if maxValacc > .85 and maxValacc < .9 : break
     f.write("###-----------------------------------------------------------------###\n")
     
 
