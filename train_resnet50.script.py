@@ -25,7 +25,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
-num_epochs = 5
+num_epochs = 36
 lr =.0001
 wd =.000
 loss='nll'
