@@ -25,7 +25,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
-num_epochs = 30
+num_epochs = 5
 lr =.0001
 wd =.000
 loss='nll'
@@ -65,6 +65,7 @@ train_accs = []
 train_losses = []
 val_accs = []
 val_losses = []
+best_model = None
 
 for epoch in range(num_epochs):
     f.write(f'EPOCH: {epoch+1}\n')
@@ -125,7 +126,7 @@ for epoch in range(num_epochs):
         _, preds = torch.max(outputs, 1)
         val_running_corrects += torch.sum(preds == labels.data)
         loss = 0
-        
+
         if epoch < num_epochs/2:
             loss = criterion_first(outputs, labels)
         else:
@@ -162,6 +163,7 @@ for epoch in range(num_epochs):
         best_model = model
     f.write("###-----------------------------------------------------------------###\n")
     
+torch.save(model, f'/storage/models/{model_name}_last.model' )
 
 plt.figure(figsize=(8, 6), dpi=60)
 plt.plot(train_accs, '-p')
@@ -177,4 +179,4 @@ plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
 f.write('training complete.')
 f.close()
-compare_after_loading(model, dataloaders, model_name)
+compare_after_loading(best_model, dataloaders, model_name)
