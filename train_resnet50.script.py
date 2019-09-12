@@ -124,7 +124,13 @@ for epoch in range(num_epochs):
         outputs = model(images)
         _, preds = torch.max(outputs, 1)
         val_running_corrects += torch.sum(preds == labels.data)
-        loss = criterion(outputs, labels)
+        loss = 0
+        
+        if epoch < num_epochs/2:
+            loss = criterion_first(outputs, labels)
+        else:
+            loss = criterion_second(outputs, labels)
+
 
         val_running_loss += loss.item()
         count +=1
