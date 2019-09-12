@@ -25,7 +25,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d")
-num_epochs = 100
+num_epochs = 37
 lr =.001
 wd =.000
 loss='nll'
@@ -45,11 +45,8 @@ model = torchvision.models.resnet50(pretrained=False, num_classes=2)
 #    param.requires_grad = False
 
 
-criterion = None
-if loss == 'nll':
-    criterion = nn.NLLLoss(weight=class_weights)
-else:
-    criterion = nn.CrossEntropyLoss(weight=class_weights)
+criterion_first = nn.NLLLoss(weight=class_weights)
+criterion_second = nn.CrossEntropyLoss(weight=class_weights)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
@@ -87,8 +84,12 @@ for epoch in range(num_epochs):
         outputs = model(images) 
         
         optimizer.zero_grad()
-
-        loss = criterion(outputs, labels)
+        loss = 0
+        if epoch < num_epochs/2:
+            loss = criterion_first(outputs, labels)
+        else:
+            loss = criterion_second(outputs, labels)
+            
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
 
