@@ -2,7 +2,7 @@ from dataloaders import dataloaders
 import torch
 import torch.nn as nn
 
-def run_test(model, dataloaders, model_name, testfile_prefix = ''):
+def run_test(model, dataloaders, model_name, testfile_suffix = ''):
     train_on_gpu = torch.cuda.is_available()
     criterion = nn.NLLLoss()
     model.eval()   
@@ -15,7 +15,7 @@ def run_test(model, dataloaders, model_name, testfile_prefix = ''):
     FN = 0
     precision = 0
     recall = 0
-    f = open(f"/storage/tests_results/{testfile_prefix}_test_res_{model_name}.txt" ,"w+")
+    f = open(f"/storage/tests_results/{model_name}_{testfile_suffix}_test_results.txt" ,"w+")
 
     for inputs, labels in dataloaders['test']['loader']:
         if train_on_gpu:
