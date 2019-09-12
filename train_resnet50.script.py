@@ -27,9 +27,9 @@ date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
 num_epochs = 30
 lr =.0001
-wd =.001
+wd =.000
 loss='nll'
-class_weights = [0.7, 1.0]
+class_weights = [1.0, 1.0]
 model_name = f"{time_str}_res50v2_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
@@ -45,11 +45,8 @@ model = torchvision.models.resnet50(pretrained=False, num_classes=2)
 #    param.requires_grad = False
 
 
-criterion = None
-if loss == 'nll':
-    criterion = nn.NLLLoss(weight=class_weights)
-else:
-    criterion = nn.CrossEntropyLoss(weight=class_weights)
+criterion_first = nn.NLLLoss(weight=class_weights)
+criterion_second = nn.CrossEntropyLoss(weight=class_weights)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
@@ -87,8 +84,12 @@ for epoch in range(num_epochs):
         outputs = model(images) 
         
         optimizer.zero_grad()
-
-        loss = criterion(outputs, labels)
+        loss = 0
+        if epoch < num_epochs/2:
+            loss = criterion_first(outputs, labels)
+        else:
+            loss = criterion_second(outputs, labels)
+            
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
 
