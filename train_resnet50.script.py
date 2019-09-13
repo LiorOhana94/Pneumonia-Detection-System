@@ -25,12 +25,12 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
-num_epochs = 36
+num_epochs = 8
 lr =.0001
-wd =.000
+wd =.0001
 loss='nll'
 class_weights = [1.0, 1.0]
-model_name = f"{time_str}_res50v2_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
+model_name = f"{time_str}_res50v3_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
 # ---------------------------------- #
@@ -45,8 +45,8 @@ model = torchvision.models.resnet50(pretrained=False, num_classes=2)
 #    param.requires_grad = False
 
 
-criterion_first = nn.NLLLoss(weight=class_weights)
-criterion_second = nn.CrossEntropyLoss(weight=class_weights)
+criterion_second = nn.NLLLoss(weight=class_weights)
+criterion_first = nn.CrossEntropyLoss(weight=class_weights)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()

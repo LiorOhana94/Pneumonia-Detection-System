@@ -7,7 +7,7 @@ from skimage.io import imshow, imsave
 import matplotlib.pyplot as plt
 
 
-from predict import predict, image_loader, test_loader
+from predict import predict, predictResnet, image_loader, test_loader
 from cam.network.utils import SaveFeatures, imshow_transform
 
 from model import model 
@@ -15,7 +15,7 @@ image_file = './temp-images/0e387530-1398-495a-b2c3-0717c5ca4a25.jpeg'
 
 for image in os.listdir('./temp-images/'): 
     image_file = f'./temp-images/{image}'
-    print(predict(model,image_file,image[0:-5],generate_map=True))
+    print(predictResnet(model,image_file,image[0:-5],generate_map=True))
 
 
 

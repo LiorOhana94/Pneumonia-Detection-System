@@ -57,6 +57,7 @@ def create_heatmap_file(sf, outputs, image, scan_guid):
     plt.imshow(imshow_transform(image))
     plt.imshow(ans, alpha=.4, cmap='jet')
     cam_path = f'./class-activation-maps/{scan_guid}.cam.png'
+    plt.axis('off')
     plt.savefig(cam_path)
     plt.close()
     return
@@ -107,7 +108,8 @@ def create_heatmap_file_resnet(model, sf, outputs, image, scan_guid):
     plt.imshow(imshow_transform(image))
     plt.imshow(ans, alpha=.4, cmap='jet')
     cam_path = f'./class-activation-maps/{scan_guid}.cam.png'
-    plt.savefig(cam_path)
+    plt.axis('off')
+    plt.savefig(cam_path)    
     plt.close()
     return
 
