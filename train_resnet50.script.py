@@ -26,10 +26,10 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
 num_epochs = 13
-lr =.0001
-wd =.0001
+lr =.00005
+wd =.00015
 loss='cel'
-class_weights = [1.0, 1.0]
+class_weights = [.8, 1.0]
 model_name = f"{time_str}_res50v3_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
 class_weights = class_weights.cuda()
