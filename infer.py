@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request, abort
 from argparse import ArgumentParser
 import uuid
 from model import model
-from predict import predict as pred
+from predict import predictResnet as pred
 import torch
 import requests
 from io import BytesIO
