@@ -28,7 +28,7 @@ time_str = date.strftime("%m%d%H%M")
 num_epochs = 13
 lr =.0001
 wd =.0001
-loss='nll'
+loss='cel'
 class_weights = [1.0, 1.0]
 model_name = f"{time_str}_res50v3_{num_epochs}e_{loss}loss_{lr}lr_{wd}wd_cw{class_weights}"
 class_weights = torch.Tensor(class_weights)
@@ -86,10 +86,7 @@ for epoch in range(num_epochs):
         
         optimizer.zero_grad()
         loss = 0
-        if epoch < num_epochs/2:
-            loss = criterion_first(outputs, labels)
-        else:
-            loss = criterion_second(outputs, labels)
+        loss = criterion_first(outputs, labels)
             
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
@@ -127,10 +124,7 @@ for epoch in range(num_epochs):
         val_running_corrects += torch.sum(preds == labels.data)
         loss = 0
 
-        if epoch < num_epochs/2:
-            loss = criterion_first(outputs, labels)
-        else:
-            loss = criterion_second(outputs, labels)
+        loss = criterion_first(outputs, labels)
 
 
         val_running_loss += loss.item()
