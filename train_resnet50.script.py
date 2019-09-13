@@ -25,7 +25,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
-num_epochs = 14
+num_epochs = 13
 lr =.0001
 wd =.0001
 loss='nll'
@@ -179,4 +179,5 @@ plt.savefig(f'/storage/trainlogs/{model_name}_lossfig.png')
 
 f.write('training complete.')
 f.close()
+compare_after_loading(model, dataloaders, f'{model_name}_last')
 compare_after_loading(best_model, dataloaders, model_name)

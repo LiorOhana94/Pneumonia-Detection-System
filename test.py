@@ -54,7 +54,6 @@ def run_test(model, dataloaders, model_name, testfile_suffix = ''):
     return
 
 def compare_after_loading(model, dataloaders, model_name):
-    run_test(model, dataloaders, model_name, 'before_load')
     torch.save(model ,f'/storage/models/{model_name}.model')
     loaded_model = torch.load(f'/storage/models/{model_name}.model')
     run_test(loaded_model, dataloaders, model_name, 'after_load')
