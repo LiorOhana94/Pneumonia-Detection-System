@@ -25,7 +25,7 @@ from cam.network.utils import Flatten, accuracy, imshow_transform, SaveFeatures
 # ----- Training Configuration ----- #
 date = datetime.datetime.now()
 time_str = date.strftime("%m%d%H%M")
-num_epochs = 13
+num_epochs = 10
 lr =.00005
 wd =.00015
 loss='cel'
@@ -45,8 +45,8 @@ model = torchvision.models.resnet50(pretrained=False, num_classes=2)
 #    param.requires_grad = False
 
 
-criterion_second = nn.NLLLoss(weight=class_weights)
-criterion_first = nn.CrossEntropyLoss(weight=class_weights)
+criterion_nll = nn.NLLLoss(weight=class_weights)
+criterion_cel = nn.CrossEntropyLoss(weight=class_weights)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
 model.cuda()
@@ -86,7 +86,10 @@ for epoch in range(num_epochs):
         
         optimizer.zero_grad()
         loss = 0
-        loss = criterion_first(outputs, labels)
+        if epoch % 5 == 0:
+            loss = criterion_nll(outputs, labels)
+        else:
+            loss = criterion_cel(outputs, labels)
             
         _, preds = torch.max(outputs, 1)
         running_corrects += torch.sum(preds == labels.data)
@@ -124,8 +127,10 @@ for epoch in range(num_epochs):
         val_running_corrects += torch.sum(preds == labels.data)
         loss = 0
 
-        loss = criterion_first(outputs, labels)
-
+        if epoch % 5 == 0:
+            loss = criterion_nll(outputs, labels)
+        else:
+            loss = criterion_cel(outputs, labels)
 
         val_running_loss += loss.item()
         count +=1
