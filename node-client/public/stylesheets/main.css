@@ -3,7 +3,7 @@
 body, html {
     height: calc(100% - 2em);
     margin: 0;
-    font-family: 'Montserrat';
+    font-family: 'Montserrat', Calibri, sans-serif;
 }
 
 body {
@@ -26,6 +26,29 @@ aside {
     background: #DCE1F6;
     grid-template-columns: auto;
     grid-template-rows: 20% auto;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number], input[type=text] {
+    height: 25px;
+    border: none;
+    border-radius: 8px;
+    background-color: lightgray;
+    transition: background-color 250ms ease-in;
+    padding: 5px;
+}
+
+
+input[type=number]:focus, input[type=text]:focus {
+    border: none;
+    border-radius: 8px;
+    background-color: lightblue;
+    outline: none;
 }
 
 figure {
@@ -57,10 +80,11 @@ ul li a {
     padding: 1.5em 3em;
     background-color: rgba(255, 255, 255, .35);
     color: #000000;
+    transition: background-color 250ms ease-in;
 }
 
 ul li a:hover {
-    background: white;
+    background-color: white;
 }
 
 main {
@@ -73,9 +97,13 @@ main {
 #avatar {
     border-radius: 50%;
     background: #ffffff;
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     margin: 2em auto 1em auto;
+    background-image: url("/images/super-nurse.jpg");
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 h1 {
@@ -100,6 +128,30 @@ h3 img {
     margin-top: 0;
 }
 
+
+p {
+    font-size: 1.2em;
+    margin-top: 0.5em;
+    line-height: 1.7;
+}
+
+.buttons-class {
+    display: inline-block;
+    color: #ffffff;
+    background-color: #063444;
+    text-decoration: none;
+    border: none;
+    padding: 10px;
+    font-size: 0.8em;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 1em 0;
+    cursor: pointer;
+    font-family: 'Montserrat';
+    transition: background-color 100ms ease-in;
+}
+
 .cta {
     display: inline-block;
     color: #ffffff;
@@ -113,33 +165,12 @@ h3 img {
     margin: 2em 0;
 }
 
-.cta:hover {
-    background-color: #0c607d
-}
-
-p {
-    font-size: 1.2em;
-    margin-top: 0.5em;
-    line-height: 1.7;
-}
-
-.buttons-class {
-    display: inline-block;
-    color: #ffffff;
-    background: #063444;
-    text-decoration: none;
-    padding: 10px;
-    font-size: 0.8em;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 4px;
-    margin: 2em 0;
-    cursor: pointer;
-    font-family: 'Montserrat';
-}
-
 .buttons-class:hover {
     background-color: #0c607d;
+}
+
+.buttons-class:active {
+    background-color: lightblue;
 }
 
 #custom-text {
@@ -246,7 +277,6 @@ h4 {
 
 .label {
     min-width: 180px;
-    margin-top: 10px;
 }
 
 .medikals-header-container {
@@ -262,4 +292,13 @@ h4 {
 
 .medikals-header-container h3 {
     margin: 0;
+}
+
+.upload-page-header {
+    font-size: 37px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
 }

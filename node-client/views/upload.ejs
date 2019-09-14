@@ -13,7 +13,7 @@
 <aside>
     <figure>
         <div id="avatar"></div>
-        <figcaption>Lior Ohana</figcaption>
+        <figcaption><%=`${user.firstname} ${user.lastname}`%> </figcaption>
     </figure>
     <nav>
         <ul>
@@ -29,12 +29,19 @@
         <h3>Medikals </h3><img src="/images/Medikals.jpg" alt="Logo">
     </div>
     <div class="upload-form">
+        <h2 class="upload-page-header">Request Diagnosis</h2>
         <form action="/authed/diagnoseScan" method="post" enctype="multipart/form-data">
-            <input type="file" id="new-file" name="scan" hidden="hidden"/>
-            <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
-            <span id="custom-text">No file chosen yet.</span>
-            <div class="label">Patient's ID:</div>
-            <input name="patientId" type="number" id="id-number" class="inputs-text">
+            <div class="row form-field">
+
+                <div class="label">Scan file:</div>
+                <input type="file" id="new-file" name="scan" hidden="hidden"/>
+                <button type="button" id="upload-button" class="buttons-class">Upload new scan</button>
+                <span id="custom-text">No file chosen yet.</span>
+            </div>
+            <div class="row form-field">
+                <div class="label">Patient's ID:</div>
+                <input name="patientId" type="number" id="id-number">
+            </div>
             <input type="submit" value="Submit" id="submit-file" hidden="hidden">
         </form>
 
@@ -42,7 +49,7 @@
                onclick="trySendForDiagnosis()">
 
         <div id="new-patient" style="display: none;">
-            <p><b>This ID does not exist in the system.</br>Please enter petient's information below:</b>
+            <p><b>Could not find patient ID.</br>Please enter the patient's information below:</b>
             </p>
             <div class="hidden-class">
                 <div class="label">First name:</div>

@@ -17,25 +17,25 @@
     </div>
     <img src="/maps/<%= data['heatmap_guid'] %>.map.png" alt="Chest X-Ray" height="250" width="250" id="scan-img">
     <div class="scan-info-class">
-        <div class="label">Scan ID:</div>
-        <input type="number" id="scan-id-number" class="inputs-text" value="<%= data['scan_id'] %>" disabled>
-    </div>
-    <div class="scan-info-class">
         <div class="label">Patient's ID:</div>
-        <input type="number" id="patient-id-number" class="inputs-text" value="<%= data['patient_id'] %>" disabled>
+        <div class="result-field"><%= data['patient_id'] %></div>
     </div>
     <div class="scan-info-class">
-        <div class="label">Date:</div>
-        <input type="datetime" id="date-text" class="inputs-text" value="<%= data['date'] %>" disabled>
+        <div class="label">Patient's Name:</div>
+        <div class="result-field"><%= `${data['patient_lastname']} ${data['patient_firstname']}` %></div>
+    </div>
+    <div class="scan-info-class">
+        <div class="label">Scan date:</div>
+        <div class="result-field"><%= data['date'] %></div>
     </div>
     <div class="scan-info-class">
         <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
-        <input type="text" id="system-diagnosis-text" class="inputs-text <%= data['result_text'] %>"
-               value="<%= data['result_text'] %>" disabled>
+        <div class="result-field <%= data['result_text'] %>"><%= data['result_text'] %></div>
     </div>
     <div class="scan-info-class">
         <div class="label">Final diagnosis:</div>
-        <input type="text" id="final-diagnosis-text" class="inputs-text">
+        <input type="checkbox" id="final-diagnosis-checkbox" <%= data['result_index'] === 1 ? 'checked' : '' %>>
+        <label class="checkbox-label" for="final-diagnosis-checkbox">Pneumonia</label>
         <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
                onclick="updateDiagnosis()">
     </div>
@@ -49,23 +49,22 @@
 
 <script type="text/javascript">
 
-    const finalDiagnosisText = document.getElementById("final-diagnosis-text");
-    const scanIdNumber = document.getElementById("scan-id-number");
+    const finalDiagnosisText = document.getElementById("final-diagnosis-checkbox");
+    const scanIdNumber = <%= data['scan_id'] %>
 
-    function updateDiagnosis() {
-        fetch('/authed/updateFinalDiagnosis',
-            {
-                method: 'post',
-                body: JSON.stringify({
-                    finalDiagnosis: finalDiagnosisText.value,
-                    scanID: scanIdNumber.value
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            })
-    }
+        function updateDiagnosis() {
+            fetch('/authed/updateFinalDiagnosis',
+                {
+                    method: 'post',
+                    body: JSON.stringify({
+                        finalDiagnosis: finalDiagnosisText.checked,
+                        scanID: scanIdNumber
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+        }
 
 
 </script>

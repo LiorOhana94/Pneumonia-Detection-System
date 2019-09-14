@@ -106,7 +106,7 @@ def create_heatmap_file_resnet(model, sf, outputs, image, scan_guid):
     plt.figure()
     plt.subplots(figsize=(4,4))
     plt.imshow(imshow_transform(image))
-    plt.imshow(ans, alpha=.4, cmap='jet')
+    plt.imshow(ans, alpha=.3, cmap='jet')
     cam_path = f'./class-activation-maps/{scan_guid}.cam.png'
     plt.axis('off')
     plt.savefig(cam_path)    

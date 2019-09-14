@@ -14,7 +14,7 @@
 <aside>
     <figure>
         <div id="avatar"></div>
-        <figcaption>Lior Ohana</figcaption>
+        <figcaption><%=`${user.firstname} ${user.lastname}`%> </figcaption>
     </figure>
     <nav>
         <ul>
@@ -29,13 +29,15 @@
     <div class="medikals-header-container">
         <h3>Medikals </h3><img src="/images/Medikals.jpg" alt="Logo">
     </div>
-    <form>
-        <input type="number" id="scan-id-number" placeholder="Enter Scan ID"/>
-        <div id="scan-not-found" style="display: none;">
-            <p><b>Scan not found.</b> </br>Please re-enter scan ID.</p>
-        </div>
-        <input class="buttons-class" id="search-button" type="button" value="Search" onclick="searchScanById()">
-    </form>
+    <div>
+        <div class="search-header">Please enter patients ID</div>
+        <input type="number" id="scan-id-number" placeholder="Patient ID" class="patient-id-input"/>
+        <input class="buttons-class" id="search-button" type="button" value="Search" onclick="searchScans()">
+        <div id="results-message" class="results-message"></div>
+    </div>
+    <div id="results-container" class="results-container">
+
+    </div>
 
 </main>
 </body>
@@ -44,31 +46,67 @@
 
 <script type="text/javascript">
     const scanIdNumber = document.getElementById("scan-id-number");
-    const scanNotFoundDiv = document.getElementById("scan-not-found");
+    const resultsContainer = document.getElementById("results-container");
+    const resultsMessage = document.getElementById("results-message");
 
-    function searchScanById() {
-        fetch('/authed/getScan',
+    function searchScans() {
+        fetch('/authed/getScans',
             {
                 method: 'post',
                 body: JSON.stringify({
-                    scanId: scanIdNumber.value
+                    patientId: scanIdNumber.value
                 }),
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 }
             })
             .then(function (response) {
                 return response.json();
             })
-            .then(function (scanInfo) {
-                console.log(scanInfo);
-                if (!scanInfo.found) {
-                    //scan not found
-                } else {
-                    //display scan details - redirect to diagnosisReview
-                }
+            .then(function (data) {
+                showResults(data);
+
             });
     }
 
+    function showResults(data) {
+        resultsContainer.innerHTML = '';
+        if (data.length === 0) {
+            resultsMessage.innerText = 'No results for this ID...';
+
+        } else {
+            resultsMessage.innerText = `Found results for ${data[0].firstName} ${data[0].lastName}:`;
+            addResultsHeader();
+            data.forEach(createResultElem)
+        }
+
+
+    }
+
+    function addResultsHeader() {
+        let mainDiv = document.createElement('div');
+        mainDiv.classList.add('result');
+        mainDiv.innerHTML = `        <div class="result-field result-header">Scan Date:</div>
+            <div class="result-field result-header">System Diagnosis:</div>
+            <div class="result-field result-header">Final Diagnosis:</div>
+            <div class="result-field result-header">Click To Review:</div>`;
+
+        resultsContainer.append(mainDiv);
+    }
+
+    function createResultElem(result, index) {
+        let mainDiv = document.createElement('div');
+        mainDiv.classList.add('result');
+        mainDiv.innerHTML = `        <div class="result-field">${result.date}</div>
+            <div class="result-field">${diagnosisFormat(result.systemDiagnosis)}</div>
+            <div class="result-field">${diagnosisFormat(result.finalDiagnosis)}</div>
+            <div class="result-field"><a href="/authed/reviewDiagnosis/${result.scanId}">Review</a></div>`;
+        setTimeout(() =>
+                resultsContainer.append(mainDiv)
+            , index * 50);
+    }
+
+    function diagnosisFormat(diagnosis) {
+        return diagnosis || 'none';
+    }
 </script>

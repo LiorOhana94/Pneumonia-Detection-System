@@ -15,7 +15,7 @@
     <h4>Welcome Admin</h4>
     <form action="/authed/updateEndpoint" method="POST">
         <p>Current Endpoint</p>
-        <input name="endpoint" type="password" id="password-text" class="inputs-text" placeholder="Enter Password">
+        <input name="endpoint" type="text" id="password-text" class="inputs-text" placeholder="Enter New Endpoint">
         <input type="submit" id="submit-button" value="Update"></br>
         <% success ? '<h6>Updated!</h6>' : '' %>
     </form>
