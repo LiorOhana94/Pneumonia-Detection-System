@@ -226,12 +226,21 @@ h4 {
 .loginbox input[type="text"], input[type="password"] {
     border: none;
     border-bottom: 1px solid #000;
-    background: transparent;
+    background: rgba(0, 0, 0, 0);
     outline: none;
     height: 40px;
     color: #000;
     font-size: 16px;
     font-family: 'Montserrat';
+    border-radius: 0;
+    transition: background-color 300ms ease-in;
+    padding: 0 7px;
+}
+
+
+.loginbox input[type="text"]:focus, input[type="password"]:focus {
+    border-bottom: 1px solid #09735a;
+    background-color: rgba(9, 115, 90, 0.1);
 }
 
 .loginbox input[type="submit"] {

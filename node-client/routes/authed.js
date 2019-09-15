@@ -248,7 +248,7 @@ router.post("/diagnoseScan",
 
     async function (req, res, next) {
 
-        await db.execute(`UPDATE scans set system_diagnosis_id=${req.nnResponse['result_text'] === 'pneumonia' ? 1 : 2} where id=${req.scanId}`);
+        await db.execute(`UPDATE scans set map_guid="${req.nnResponse['heatmap_guid']}", system_diagnosis_id=${req.nnResponse['result_text'] === 'pneumonia' ? 1 : 2} where id=${req.scanId}`);
 
         let locals = {
             data: {
