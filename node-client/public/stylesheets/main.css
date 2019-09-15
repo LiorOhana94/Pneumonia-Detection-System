@@ -311,3 +311,11 @@ h4 {
     display: flex;
     align-items: center;
 }
+
+.upload-form input.required{
+    background-color: #cf6379;
+}
+.upload-form .buttons-class.required{
+
+    background-color: #91132d;
+}

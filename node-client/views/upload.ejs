@@ -13,7 +13,7 @@
 <aside>
     <figure>
         <div id="avatar"></div>
-        <figcaption><%=`${user.firstname} ${user.lastname}`%> </figcaption>
+        <figcaption><%= `${user.firstname} ${user.lastname}` %> </figcaption>
     </figure>
     <nav>
         <ul>
@@ -103,6 +103,9 @@
     });
 
     function trySendForDiagnosis() {
+        if(!validateForm()){
+            return;
+        }
         fetch('/authed/doesIdExist',
             {
                 method: 'post',
@@ -122,6 +125,7 @@
                 if (!idExist) {
                     newPatientDiv.style.display = "block";
                     searchIdButton.style.display = "none";
+                    idNumber.disabled = true;
                 } else {
                     uploadForDiagnosis();
                 }
@@ -129,6 +133,9 @@
     }
 
     function createNewPatient() {
+        if(!validateForm()){
+            return;
+        }
         fetch('/authed/addPatient',
             {
                 method: 'post',
@@ -151,5 +158,37 @@
         submitFileButton.click();
     }
 
+    function validateForm() {
+        let validated = true;
+        validated = validateField(idNumber) && validated;
+        validated = validateFileField() && validated;
+        if (newPatientDiv.style.display === 'block') {
+            ([firstNameText, lastNameText, ageNumber].map(validateField)).forEach(res => validated = res && validated);
+        }
 
+        return validated;
+    }
+
+    function validateFileField() {
+        let validated = validateField(fileInputElem);
+        if (!validated) {
+            uploadButton.classList.add('required');
+            uploadButton.disabled = false;
+        } else {
+            uploadButton.classList.remove('required');
+        }
+
+        return validated;
+    }
+
+    function validateField(inputElem) {
+        if (!inputElem.value || inputElem.value === '') {
+            inputElem.classList.add('required');
+            inputElem.disabled = false;
+            return false;
+        } else {
+            inputElem.classList.remove('required');
+            return true;
+        }
+    }
 </script>

@@ -32,9 +32,15 @@
         <div class="label" id="system-diagnosis-label"><b>System diagnosis:</b></div>
         <div class="result-field <%= data['result_text'] %>"><%= data['result_text'] %></div>
     </div>
+    <% if (data['final_result_text']){ %>
+        <div class="scan-info-class">
+            <div class="label" id="system-diagnosis-label"><b>Final diagnosis:</b></div>
+            <div class="result-field <%= data['final_result_text'] %>"><%= data['final_result_text'] %></div>
+        </div>
+    <% } %>
     <div class="scan-info-class">
-        <div class="label">Final diagnosis:</div>
-        <input type="checkbox" id="final-diagnosis-checkbox" <%= data['result_index'] === 1 ? 'checked' : '' %>>
+        <div class="label">Update Final diagnosis:</div>
+        <input type="checkbox" id="final-diagnosis-checkbox">
         <label class="checkbox-label" for="final-diagnosis-checkbox">Pneumonia</label>
         <input class="buttons-class update-button" id="update-diagnosis-button" type="button" value="Update"
                onclick="updateDiagnosis()">

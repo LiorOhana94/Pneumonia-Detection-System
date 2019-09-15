@@ -113,7 +113,7 @@ router.get('/searchPage', function (req, res, next) {
 
 router.get('/reviewDiagnosis/:scanId', async function (req, res, next) {
 
-    let [results, tableDef] = await db.execute(`select scans.id as id, system_diagnosis_id, patients.patient_id as patientId, first_name as patientFirstname, last_name as patientLastname, map_guid, date from scans left join patients on patients.id = scans.patient_id where scans.id = ${req.params.scanId};`);
+    let [results, tableDef] = await db.execute(`select scans.id as id, system_diagnosis_id, final_diagnosis_id, patients.patient_id as patientId, first_name as patientFirstname, last_name as patientLastname, map_guid, date from scans left join patients on patients.id = scans.patient_id where scans.id = ${req.params.scanId};`);
 
     if (results.length === 0) {
         res.status(405);
@@ -124,9 +124,9 @@ router.get('/reviewDiagnosis/:scanId', async function (req, res, next) {
         if (!sdi) {
             return null
         } else if (sdi === 1) {
-            return 'pneumonia';
+            return 1;
         } else {
-            return 'healty';
+            return ;
         }
     })(results[0].system_diagnosis_id);
 
@@ -136,15 +136,37 @@ router.get('/reviewDiagnosis/:scanId', async function (req, res, next) {
         } else if (sdi === 1) {
             return 'pneumonia';
         } else {
-            return 'healty';
+            return 'healthy';
         }
     })(results[0].system_diagnosis_id);
+
+    let finalResultIndex = (function (sdi) {
+        if (!sdi) {
+            return null
+        } else if (sdi === 1) {
+            return 1;
+        } else {
+            return 0;
+        }
+    })(results[0].final_diagnosis_id);
+
+    let finalResultText = (function (sdi) {
+        if (!sdi) {
+            return 'none'
+        } else if (sdi === 1) {
+            return 'pneumonia';
+        } else {
+            return 'healthy';
+        }
+    })(results[0].final_diagnosis_id);
 
     let locals = {
         data: {
             "heatmap_guid": results[0].map_guid,
             "result_index": resultIndex,
+            "final_result_index": finalResultIndex,
             "result_text": resultText,
+            "final_result_text": finalResultText,
             "scan_id": results[0].id,
             "patient_id": results[0].patientId,
             "patient_firstname": results[0].patientFirstname,
@@ -295,8 +317,14 @@ router.post('/updateEndpoint', function (req, res, next) {
 
 
 function formatDate(date) {
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${makeDoubleDigit(date.getHours())}:${makeDoubleDigit(date.getMinutes())}:${makeDoubleDigit(date.getSeconds())}`
 }
 
+function makeDoubleDigit(num){
+    if(num <= 9){
+        return '0' + num;
+    }
+    return num;
+}
 
 module.exports = router;
